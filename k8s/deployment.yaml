@@ -15,5 +15,4 @@ spec:
       containers:
         - name: hello-ctr
           image: nigelpoulton/k8sbook:latest
-          ports:
-            - containerPort: 8080
+          containerPort: 8080
