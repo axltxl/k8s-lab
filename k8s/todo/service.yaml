@@ -1,15 +1,18 @@
-# FIXME: doc me
+# A Service represents a single entrypoint in the cluster
+# acting as a "service", in the background it proxies all
+# traffic to pods whose labels match its selector field
 apiVersion: v1
 kind: Service
 metadata:
-  name: httpd-svc
+  name: todo-httpd-svc
   namespace: k8s-lab
 spec:
+  selector:
+    app: todo-httpd
   type: NodePort
   ports:
-    - port: 8080
-      nodePort: 30001
-      targetPort: 8080
+    - name: todo-httpd-svc
+      port: 8000
+      targetPort: 8000
       protocol: TCP
-  selector:
-    app: httpd
+      nodePort: 30800

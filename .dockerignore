@@ -1,5 +1,14 @@
+# Visual Studio Code
 .vscode
+
+# Kubernetes
 k8s
-Dockerfile
-TODO
+
+# Git
 .gitignore
+
+# Docker
+Dockerfile
+
+# Golang
+__debug_bin

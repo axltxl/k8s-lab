@@ -1,20 +1,33 @@
-# FIXME: doc me
+# This baby takes care of making sure a number
+# of todo-httpd pods are always provisioned and running
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpd-deploy
+  name: todo-httpd-deploy
   namespace: k8s-lab
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: httpd
+      app: todo-httpd
   template:
     metadata:
       labels:
-        app: httpd
+        app: todo-httpd
     spec:
       containers:
-        - name: hello-ctr
-          image: nigelpoulton/k8sbook:latest
-          containerPort: 8080
+        # This is the todo-httpd Pod
+        - name: todo-httpd
+          image: k8s-lab-todo
+          # Since the todo-httpd container image
+          # gets built inside minikube's docker daemon
+          # then, we need to make sure that this cluster
+          # takes the local image everytime
+          # source:
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              memory: 64Mi
+              cpu: 10m

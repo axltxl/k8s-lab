@@ -4,7 +4,7 @@
     {
       "label": "k8s/docker/build_images",
       "type": "shell",
-      "command": "scripts/k8s/build_images.sh",
+      "command": "scripts/k8s/minikube/build_images.sh",
     },
     {
       "label": "k8s/apply",

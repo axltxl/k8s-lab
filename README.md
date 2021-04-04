@@ -1,9 +1,30 @@
 # k8s-lab
 
 ## Requirements
-- [golang](golang.org)
-- [docker](docker.com)
-- [Kubernetes](kubernetes.io)
+- [golang](https://golang.org)
+- [docker](https://docker.com)
+- [`kubectl`](https://kubernetes.io)
+- [`minikube`](https://minikube.sigs.k8s.io/)
+
+## How to
+
+### Local development
+####
+`go run cmd/todo/main.go`
+
+### Docker
+
+###
+`docker-compose up`
+
+### Kubernetes
+#### Apply all manifests
+`scripts/k8s/minikube/build_images.sh`
+`kubectl apply --recursive -f k8s`
+
+#### Expose a `Service`
+`scripts/k8s/minikube/expose.sh <svc_name>`
+
 
 ## Copyright and Licensing
 Copyright (c) 2021 Alejandro Ricoveri

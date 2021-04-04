@@ -1,4 +1,5 @@
-# FIXME: doc me
+# Namespace where the app is going
+# to reside in the cluster
 apiVersion: v1
 kind: Namespace
 metadata:
