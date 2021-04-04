@@ -1,16 +1,18 @@
+# FIXME: doc me
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-deploy
+  name: httpd-deploy
+  namespace: k8s-lab
 spec:
-  replicas: 10
+  replicas: 3
   selector:
     matchLabels:
-      app: hello-world
+      app: httpd
   template:
     metadata:
       labels:
-        app: hello-world
+        app: httpd
     spec:
       containers:
         - name: hello-ctr

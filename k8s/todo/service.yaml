@@ -1,7 +1,9 @@
+# FIXME: doc me
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-svc
+  name: httpd-svc
+  namespace: k8s-lab
 spec:
   type: NodePort
   ports:
@@ -10,4 +12,4 @@ spec:
       targetPort: 8080
       protocol: TCP
   selector:
-    app: hello-world
+    app: httpd

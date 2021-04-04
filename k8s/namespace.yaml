@@ -1,0 +1,5 @@
+# FIXME: doc me
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-lab
