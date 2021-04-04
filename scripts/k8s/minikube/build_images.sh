@@ -15,6 +15,6 @@ eval $(minikube -p minikube docker-env)
 
 
 # Build and tag the images
-docker build . -t k8s-lab-todo
+docker build . -t k8s-lab/todod
 
 

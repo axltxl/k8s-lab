@@ -4,14 +4,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: todo-httpd-svc
+  name: todod-svc
   namespace: k8s-lab
 spec:
   selector:
-    app: todo-httpd
+    app: todod
   type: NodePort
   ports:
-    - name: todo-httpd-svc
+    - name: todod-svc
       port: 8000
       targetPort: 8000
       protocol: TCP

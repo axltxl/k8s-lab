@@ -10,7 +10,7 @@
 
 ### Local development
 ####
-`go run cmd/todo/main.go`
+`go run src/cmd/todo/main.go`
 
 ### Docker
 

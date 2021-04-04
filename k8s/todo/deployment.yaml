@@ -1,25 +1,25 @@
 # This baby takes care of making sure a number
-# of todo-httpd pods are always provisioned and running
+# of todod pods are always provisioned and running
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-httpd-deploy
+  name: todod-deploy
   namespace: k8s-lab
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: todo-httpd
+      app: todod
   template:
     metadata:
       labels:
-        app: todo-httpd
+        app: todod
     spec:
       containers:
-        # This is the todo-httpd Pod
-        - name: todo-httpd
-          image: k8s-lab-todo
-          # Since the todo-httpd container image
+        # This is the todod Pod
+        - name: todod
+          image: k8s-lab/todod
+          # Since the todod container image
           # gets built inside minikube's docker daemon
           # then, we need to make sure that this cluster
           # takes the local image everytime

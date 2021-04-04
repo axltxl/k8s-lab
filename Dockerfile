@@ -9,7 +9,7 @@ RUN mkdir /golang
 # Set up (compile + install) binaries
 RUN mkdir /app
 COPY . /app
-RUN cd /app; go install ./cmd/todo
+RUN cd /app; go install ./src/cmd/todod
 
 # Command
-CMD [ "/golang/bin/todo" ]
+CMD [ "/golang/bin/todod" ]
