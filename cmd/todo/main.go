@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/axltxl/k8s-lab/server"
+	"github.com/axltxl/k8s-lab/pkg/server"
 )
 
 const HTTP_PORT = "8000"
