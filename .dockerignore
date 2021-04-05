@@ -8,10 +8,11 @@ scripts
 k8s
 
 # Git
-.gitignore
+.git*
 
 # Docker
 Dockerfile
+docker-compose.yml
 
 # Golang
 __debug_bin
