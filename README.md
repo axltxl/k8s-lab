@@ -19,11 +19,13 @@
 
 ### Kubernetes
 #### Apply all manifests
-`scripts/k8s/minikube/build_images.sh`
 `kubectl apply --recursive -f k8s`
 
-#### Expose a `Service`
-`scripts/k8s/minikube/expose.sh <svc_name>`
+
+### `minikube`
+`minikube start --driver=kyperkit`
+`scripts/k8s/minikube/build_images.sh`
+`curl $(minikube ip):<svc_port>`
 
 
 ## Copyright and Licensing
