@@ -1,0 +1,22 @@
+# HTTP endpoint tests for REST client
+# humao.rest-client
+# -----------------------------------
+
+@base_url=http://localhost:8000
+
+
+#  TODO list
+#####################
+
+# Get todo list
+GET {{base_url}}/todolist
+
+
+###
+
+
+# Post new TODO
+POST {{base_url}}/todolist/item
+Content-Type: text/plain
+
+This is a new item
