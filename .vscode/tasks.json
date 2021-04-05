@@ -2,6 +2,16 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "k8s/set_ctx",
+      "type": "process",
+      "command": "kubectl",
+      "args": [
+        "config",
+        "set-context",
+        "minikube"
+      ]
+    },
+    {
       "label": "k8s/docker/build_images",
       "type": "shell",
       "command": "scripts/k8s/minikube/build_images.sh",
@@ -16,16 +26,19 @@
         "-f",
         "k8s"
       ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
       "options": {
         "cwd": "${workspaceFolder}"
       },
+      "dependsOrder": "sequence",
       "dependsOn": [
-        "k8s/docker/build_images"
-      ]
+        "k8s/set_ctx",
+        "k8s/docker/build_images",
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     }
   ]
 }

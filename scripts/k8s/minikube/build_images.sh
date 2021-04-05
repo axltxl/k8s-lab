@@ -13,7 +13,6 @@ cd $SCRIPT_DIR/../../..
 # to have them "locally" available.
 eval $(minikube -p minikube docker-env)
 
-
 # Build and tag the images
 docker build . -t k8s-lab/todod
 
