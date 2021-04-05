@@ -1,7 +1,10 @@
 # Visual Studio Code
 .vscode
 
-# Kubernetes
+# scripts
+scripts
+
+# Kubernetes/minikube
 k8s
 
 # Git
