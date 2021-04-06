@@ -2,5 +2,13 @@ version: "3"
 services:
   todod:
     build: .
+    environment:
+      TODO_REDIS_HOST: redis
+      TODO_HTTP_PORT: 8000
     ports:
       - "8000:8000"
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"

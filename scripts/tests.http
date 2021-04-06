@@ -16,7 +16,9 @@ GET {{base_url}}/todolist
 
 
 # Post new TODO
-POST {{base_url}}/todolist/item
-Content-Type: text/plain
+POST {{base_url}}/todolist/task
+Content-Type: application/json
 
-This is a new item
+{
+  "message": "fare la spesa"
+}
