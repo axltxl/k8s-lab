@@ -1,3 +1,26 @@
+// Copyright (c) 2021 Alejandro Ricoveri
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+// Package server implements the web server
+// and it handles requests on the TodoList
+// using a Redis server as storage
 package server
 
 import (
@@ -13,33 +36,55 @@ import (
 	"github.com/axltxl/k8s-lab/src/pkg/uuid"
 )
 
-// FIXME: doc me
-// var config.HttpPort string = config.Get().HttpPort
-// var config.HttpPort string = config.HttpPort
+func Start() error {
 
-/* todoList resource */
-func todoListHandler(w http.ResponseWriter, r *http.Request) {
-
-	// FIXME: set Content-Type to JSON
-	w.Header().Set("Content-Type", "application/json")
-
-	// Get a *list.TodoList
-	todolist := redis.GetTodoList()
-
-	// Decode it as a JSON string (actually this returns a []byte)
-	json_data, _ := json.Marshal(todolist)
-
-	// and give the answer back
-	fmt.Fprintln(w, string(json_data))
+	// FIXME: doc me
+	log.Printf("Starting server at port %s", config.HttpPort)
+	return http.ListenAndServe(fmt.Sprintf(":%s", config.HttpPort), nil)
 }
 
-/* todoListItem resource */
-func todoListTaskHandler(w http.ResponseWriter, r *http.Request) {
+// FIXME: doc me
+func init() {
+	http.HandleFunc("/todolist", standardHandler(todoListHandler))
+	http.HandleFunc("/todolist/task", standardHandler(todoListTaskHandler))
+}
 
-	var task *list.Task
+// Function handler
+// decorators a la golang
+func standardHandler(f func(http.ResponseWriter, *http.Request) error) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json") // Set Content-Type to JSON
 
-	// request_data := make(map[string]interface{})
-	// anonymous struct
+		err := f(w, r)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Printf("handling %q: %v", r.RequestURI, err)
+		}
+	}
+}
+
+// GET /todolist
+func todoListHandler(w http.ResponseWriter, r *http.Request) (err error) {
+
+	todolist, err := redis.GetTodoList()
+	if err != nil {
+		return
+	}
+
+	todolist_json, err := todolist.ToJson()
+	if err != nil {
+		return
+	}
+
+	fmt.Fprintln(w, todolist_json)
+
+	return
+}
+
+// FIXME: doc me
+func getNewTaskFromReq(r *http.Request) (task *list.Task, err error) {
+
 	request_data := struct {
 		Message string `json:"message"`
 	}{
@@ -47,42 +92,49 @@ func todoListTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Unmarshaling this was pain in the ass to understand
-	request_body, _ := ioutil.ReadAll(r.Body)
-	json.Unmarshal(request_body, &request_data)
+	request_body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return
+	}
 
-	w.Header().Set("Content-Type", "application/json")
+	if err = json.Unmarshal(request_body, &request_data); err != nil {
+		return
+	}
+
+	// Create new task
+	task = &list.Task{
+		Id:      uuid.GenerateUuid(),
+		Message: request_data.Message,
+	}
+
+	return
+}
+
+// POST /todolist/task
+func todoListTaskHandler(w http.ResponseWriter, r *http.Request) (err error) {
 
 	if r.Method == "POST" {
 
-		// Create new task
-		task = &list.Task{
-			Id:      uuid.GenerateUuid(),
-			Message: request_data.Message,
+		var task *list.Task
+		task, err = getNewTaskFromReq(r)
+		if err != nil {
+			return
 		}
 
 		// and push it
-		redis.PushTask(task)
+		if err = redis.PushTask(task); err != nil {
+			return
+		}
 
-		// Decode it as a JSON string (actually this returns a []byte)
-		json_data, _ := json.Marshal(task)
+		var task_json string
+		task_json, err = task.ToJson()
+		if err != nil {
+			return
+		}
 
 		// and give the answer back
-		fmt.Fprintln(w, string(json_data))
+		fmt.Fprintln(w, task_json)
 	}
-}
 
-// FIXME: doc me
-func setupHandlers() {
-	http.HandleFunc("/todolist", todoListHandler)
-	http.HandleFunc("/todolist/task", todoListTaskHandler)
-}
-
-func Start() error {
-
-	//
-	setupHandlers()
-
-	// FIXME: doc me
-	log.Printf("Starting server at port %s", config.HttpPort)
-	return http.ListenAndServe(fmt.Sprintf(":%s", config.HttpPort), nil)
+	return
 }
