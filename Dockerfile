@@ -1,9 +1,8 @@
 # Basic dockerfile
-FROM alpine:latest
+FROM golang:1.16-alpine
 
 # Set up golang
 ENV GOPATH /golang
-RUN apk update && apk add go
 RUN mkdir /golang
 
 # Set up (compile + install) binaries
