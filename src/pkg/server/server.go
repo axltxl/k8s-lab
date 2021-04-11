@@ -36,27 +36,20 @@ import (
 	"github.com/axltxl/k8s-lab/src/pkg/uuid"
 )
 
+// Start web server
 func Start() error {
-
-	// FIXME: doc me
 	log.Printf("Starting server at port %s", config.HttpPort)
 	return http.ListenAndServe(fmt.Sprintf(":%s", config.HttpPort), nil)
 }
 
-// FIXME: doc me
-func init() {
-	http.HandleFunc("/todolist", standardHandler(todoListHandler))
-	http.HandleFunc("/todolist/task", standardHandler(todoListTaskHandler))
-}
-
-// Function handler
-// decorators a la golang
+// Function handler (decorators a la golang)
 func standardHandler(f func(http.ResponseWriter, *http.Request) error) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json") // Set Content-Type to JSON
 
 		err := f(w, r)
 
+		// Send a 500 if there's an error
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			log.Printf("handling %q: %v", r.RequestURI, err)
@@ -82,9 +75,12 @@ func todoListHandler(w http.ResponseWriter, r *http.Request) (err error) {
 	return
 }
 
-// FIXME: doc me
+// Get a list.Task from request
 func getNewTaskFromReq(r *http.Request) (task *list.Task, err error) {
 
+	//{
+	//	"message": "<string>"
+	//}
 	request_data := struct {
 		Message string `json:"message"`
 	}{
@@ -134,7 +130,14 @@ func todoListTaskHandler(w http.ResponseWriter, r *http.Request) (err error) {
 
 		// and give the answer back
 		fmt.Fprintln(w, task_json)
+	} else {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
 
 	return
+}
+
+func init() {
+	http.HandleFunc("/todolist", standardHandler(todoListHandler))
+	http.HandleFunc("/todolist/task", standardHandler(todoListTaskHandler))
 }

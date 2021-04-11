@@ -32,46 +32,53 @@ import (
 )
 
 var (
-	redisHost string = config.RedisHost
-	redisPort string = config.RedisPort
-	redisCtx         = context.Background()
+	redisHost   string        = config.RedisHost
+	redisPort   string        = config.RedisPort
+	redisCtx                  = context.Background()
+	redisClient *redis.Client = nil
 )
 
-// FIXME: doc me
-func connect() *redis.Client {
-	log.Printf("Redis: connecting to host %s:%s", redisHost, redisPort)
-	return redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", redisHost, redisPort),
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-}
-
-// FIXME: doc me
+// Push a task on the redis cache server
 func PushTask(task *list.Task) error {
 	rdb := connect()
 	return rdb.Set(redisCtx, task.Id, task.Message, 0).Err()
 }
 
-// FIXME: doc me
+// Get a TodoList from redis server
 func GetTodoList() (l *list.TodoList, err error) {
 	rdb := connect()
 
+	// KEYS *
 	keys, err := rdb.Keys(redisCtx, "*").Result()
 	if err != nil {
 		return
 	}
 
+	// Generate an array of list.Task
 	tasks := make([]list.Task, len(keys))
 	for i, task_id := range keys {
 		task_message, _ := rdb.Get(redisCtx, task_id).Result()
 		tasks[i] = list.Task{Id: task_id, Message: task_message}
 	}
 
-	//
+	// Create TodoList
 	l = &list.TodoList{
 		Tasks: tasks,
 	}
 
 	return
+}
+
+// Connect to a redis server
+func connect() *redis.Client {
+	if redisClient == nil {
+		log.Printf("Redis: connecting to host %s:%s", redisHost, redisPort)
+		redisClient = redis.NewClient(&redis.Options{
+			Addr:     fmt.Sprintf("%s:%s", redisHost, redisPort),
+			Password: "", // no password set
+			DB:       0,  // use default DB
+		})
+	}
+
+	return redisClient
 }
