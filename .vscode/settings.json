@@ -1,0 +1,16 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "hostName": "localhost",
+      "hostPort": "8000"
+    },
+    "local": {
+      "hostName": "{{$shared hostName}}",
+      "hostPort": "{{$shared hostPort}}"
+    },
+    "minikube": {
+      "hostName": "192.168.64.4", // this doesn't work across restarts
+      "hostPort": "30800"
+    }
+  }
+}

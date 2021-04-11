@@ -2,23 +2,29 @@
 # humao.rest-client
 # -----------------------------------
 
-@base_url=http://localhost:8000
+# Variables
+@baseUrl = http://{{hostName}}:{{hostPort}}
 
 
 #  TODO list
 #####################
 
 # Get todo list
-GET {{base_url}}/todolist
+GET {{baseUrl}}/todolist
 
 
 ###
 
 
-# Post new TODO
-POST {{base_url}}/todolist/task
+# Post new TODO task
+POST {{baseUrl}}/todolist/task
 Content-Type: application/json
 
 {
   "message": "fare la spesa"
 }
+
+###
+
+# GET TODO task
+GET {{baseUrl}}/todolist/task
