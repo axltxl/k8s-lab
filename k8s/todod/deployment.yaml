@@ -18,7 +18,7 @@ spec:
       containers:
         # This is the todod Pod
         - name: todod
-          image: k8s-lab/todod
+          image: k8s-lab/todod:latest
           # Since the todod container image
           # gets built inside minikube's docker daemon
           # then, we need to make sure that this cluster
