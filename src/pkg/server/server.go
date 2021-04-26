@@ -81,10 +81,8 @@ func getNewTaskFromReq(r *http.Request) (task *list.Task, err error) {
 	//{
 	//	"message": "<string>"
 	//}
-	request_data := struct {
+	var request_data struct {
 		Message string `json:"message"`
-	}{
-		"",
 	}
 
 	// Unmarshaling this was pain in the ass to understand
