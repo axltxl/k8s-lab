@@ -25,6 +25,7 @@ Vagrant.configure("2") do |config|
         # Disable swap on boot
         # sudo sed -i '/^[^#]*\/swap.img/s/^/#/' /etc/fstab
 
+
         # Install container runtime (containerd)
         # Add Docker's official GPG key:
         if [ -z "$(which containerd)" ]; then
@@ -66,19 +67,22 @@ Vagrant.configure("2") do |config|
 
     # Control plane
     # ----
-    config.vm.define "master" do |master|
-        master.vm.box = @vm_box
-        master.vm.box_version = @vm_box_version
+    config.vm.define "cp" do |cp|
+        cp.vm.box = @vm_box
+        cp.vm.box_version = @vm_box_version
 
         # Network configuration
-        master.vm.network "private_network", ip: "192.168.0.11"
+        cp.vm.network "private_network", ip: "192.168.0.11"
 
-        master.vm.provider "virtualbox" do |vb|
+        cp.vm.provider "virtualbox" do |vb|
             vb.memory = @vm_memory
             vb.cpus = @vm_cpus
         end
 
-        master.vm.provision "shell", inline: <<-EOF
+        cp.vm.provision "shell", inline: <<-EOF
+            # Set hostname
+            sudo hostnamectl set-hostname control-plane
+
             # Install kubeadm
             # ------------------------------------
             if [ -z "$(which kubeadm)" ]; then
@@ -91,11 +95,20 @@ Vagrant.configure("2") do |config|
     # Worker nodes
     # ----
     config.vm.define "n1" do |node|
+        node.vm.provision "shell", inline: <<-EOF
+            # Set hostname
+            sudo hostnamectl set-hostname n1
+        EOF
         # Network configuration
         node.vm.network "private_network", ip: "192.168.0.21"
     end
 
     config.vm.define "n2" do |node|
+        node.vm.provision "shell", inline: <<-EOF
+            # Set hostname
+            sudo hostnamectl set-hostname n2
+        EOF
+
         # Network configuration
         node.vm.network "private_network", ip: "192.168.0.22"
     end
