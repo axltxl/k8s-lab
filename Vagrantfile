@@ -4,25 +4,6 @@
 @vm_cpus = 2
 @vm_memory = "2048"
 
-# Control plane
-# ----
-Vagrant.configure("2") do |config|
-    config.vm.define "master" do |master|
-        master.vm.box = @vm_box
-        master.vm.box_version = @vm_box_version
-
-        master.vm.provider "virtualbox" do |vb|
-            vb.memory = @vm_memory
-            vb.cpus = @vm_cpus
-        end
-
-        master.vm.provision "shell", inline: <<-EOF
-        EOF
-    end
-end
-
-# Worker nodes
-# ----
 Vagrant.configure("2") do |config|
 
     config.vm.box = @vm_box
@@ -33,12 +14,38 @@ Vagrant.configure("2") do |config|
         vb.cpus = @vm_cpus
     end
 
+    # General provisioning
     config.vm.provision "shell", inline: <<-EOF
+        sudo apt-get update -y
     EOF
 
-    config.vm.define "worker1" do |worker|
+    # Control plane
+    # ----
+    config.vm.define "master" do |master|
+        master.vm.box = @vm_box
+        master.vm.box_version = @vm_box_version
+
+        # Network configuration
+        master.vm.network "private_network", ip: "192.168.0.11"
+
+        master.vm.provider "virtualbox" do |vb|
+            vb.memory = @vm_memory
+            vb.cpus = @vm_cpus
+        end
+
+        master.vm.provision "shell", inline: <<-EOF
+        EOF
     end
 
-    config.vm.define "worker2" do |worker|
+    # Worker nodes
+    # ----
+    config.vm.define "n1" do |node|
+        # Network configuration
+        node.vm.network "private_network", ip: "192.168.0.21"
+    end
+
+    config.vm.define "n2" do |node|
+        # Network configuration
+        node.vm.network "private_network", ip: "192.168.0.22"
     end
 end
