@@ -3,6 +3,7 @@
 @vm_box_version = "202502.21.0"
 @vm_cpus = 2
 @vm_memory = "2048"
+@k8s_num_worker_nodes = 1
 
 Vagrant.configure("2") do |config|
 
@@ -119,22 +120,14 @@ EOF
 
     # Worker nodes
     # ----
-    config.vm.define "n1" do |node|
-        node.vm.provision "shell", inline: <<-SHELL
-            # Set hostname
-            sudo hostnamectl set-hostname n1
-        SHELL
-        # Network configuration
-        node.vm.network "private_network", ip: "192.168.0.21"
-    end
-
-    config.vm.define "n2" do |node|
-        node.vm.provision "shell", inline: <<-SHELL
-            # Set hostname
-            sudo hostnamectl set-hostname n2
-        SHELL
-
-        # Network configuration
-        node.vm.network "private_network", ip: "192.168.0.22"
+    (1..@k8s_num_worker_nodes).each do |i|
+        config.vm.define "n#{i}" do |node|
+            node.vm.provision "shell", inline: <<-SHELL
+                # Set hostname
+                sudo hostnamectl set-hostname n#{i}
+            SHELL
+            # Network configuration
+            node.vm.network "private_network", ip: "192.168.0.2#{i}"
+        end
     end
 end
