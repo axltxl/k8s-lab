@@ -120,14 +120,15 @@ EOF
 
     # Worker nodes
     # ----
-    (1..@k8s_num_worker_nodes).each do |i|
-        config.vm.define "n#{i}" do |node|
-            node.vm.provision "shell", inline: <<-SHELL
-                # Set hostname
-                sudo hostnamectl set-hostname n#{i}
-            SHELL
-            # Network configuration
-            node.vm.network "private_network", ip: "192.168.0.2#{i}"
-        end
-    end
+    # FIXME: include this when the time comes
+    # (1..@k8s_num_worker_nodes).each do |i|
+    #     config.vm.define "n#{i}" do |node|
+    #         node.vm.provision "shell", inline: <<-SHELL
+    #             # Set hostname
+    #             sudo hostnamectl set-hostname n#{i}
+    #         SHELL
+    #         # Network configuration
+    #         node.vm.network "private_network", ip: "192.168.0.2#{i}"
+    #     end
+    # end
 end
