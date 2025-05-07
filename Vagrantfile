@@ -2,7 +2,7 @@
 @vm_box = "bento/ubuntu-24.04"
 @vm_box_version = "202502.21.0"
 @vm_cpus = 2
-@vm_memory = "2048"
+@vm_memory = "3184"
 @k8s_num_worker_nodes = 1
 
 Vagrant.configure("2") do |config|
