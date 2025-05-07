@@ -82,9 +82,6 @@ EOF
             sudo apt-get update
             sudo apt-get install -y kubelet kubeadm kubectl
             sudo apt-mark hold kubelet kubeadm kubectl
-
-            # Enable and start the kubelet service.
-            sudo systemctl enable --now kubelet
         fi
 
         # Restart services regardless of the state
@@ -110,6 +107,13 @@ EOF
         cp.vm.provision "shell", inline: <<-SHELL
             # Set hostname
             sudo hostnamectl set-hostname control-plane
+
+            if [ ! -d /etc/kubernetes/pki ]; then
+                # Initialize the Kubernetes cluster
+                # (TLS PKI is generated automatically at /etc/kubernetes/pki)
+                # ------------------------------------
+                sudo kubeadm init
+            fi
         SHELL
     end
 
