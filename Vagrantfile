@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     end
 
     # General provisioning
-    config.vm.provision "shell", inline: <<-EOF
+    config.vm.provision "shell", inline: <<-SHELL
         sudo apt-get update -y
 
         # Disable swap
@@ -41,6 +41,30 @@ Vagrant.configure("2") do |config|
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
             sudo apt-get update
             sudo apt-get install containerd.io
+
+            # Configure containerd
+            # ------------------------------------
+            sudo mkdir -p /etc/containerd
+            sudo cp /vagrant/files/remote/containerd/config.toml /etc/containerd/config.toml
+
+            # disable a bug in ubuntu 22.04
+            # which prevents you from deleting pods
+            # -------------------------------------
+            sudo systemctl stop apparmor.service
+            sudo systemctl disable apparmor.service
+        fi
+
+        # Enable IPv4 forwarding
+        # ------------------------------------
+        # sysctl params required by setup, params persist across reboots
+        if [ ! -f /etc/sysctl.d/k8s.conf ]; then
+            # sysctl params required by setup, params persist across reboots
+            cat << EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.ipv4.ip_forward = 1
+EOF
+
+            # Apply sysctl params without reboot
+            sudo sysctl --system
         fi
 
         # Install kubelet and kubectl
@@ -63,7 +87,11 @@ Vagrant.configure("2") do |config|
             sudo systemctl enable --now kubelet
         fi
 
-    EOF
+        # Restart services regardless of the state
+        # (in this way, we make sure services are running with the latest configuration)
+        sudo systemctl restart containerd
+        sudo systemctl restart kubelet
+    SHELL
 
     # Control plane
     # ----
@@ -79,7 +107,7 @@ Vagrant.configure("2") do |config|
             vb.cpus = @vm_cpus
         end
 
-        cp.vm.provision "shell", inline: <<-EOF
+        cp.vm.provision "shell", inline: <<-SHELL
             # Set hostname
             sudo hostnamectl set-hostname control-plane
 
@@ -89,25 +117,25 @@ Vagrant.configure("2") do |config|
                 sudo apt-get install -y kubeadm
                 sudo apt-mark hold kubeadm
             fi
-        EOF
+        SHELL
     end
 
     # Worker nodes
     # ----
     config.vm.define "n1" do |node|
-        node.vm.provision "shell", inline: <<-EOF
+        node.vm.provision "shell", inline: <<-SHELL
             # Set hostname
             sudo hostnamectl set-hostname n1
-        EOF
+        SHELL
         # Network configuration
         node.vm.network "private_network", ip: "192.168.0.21"
     end
 
     config.vm.define "n2" do |node|
-        node.vm.provision "shell", inline: <<-EOF
+        node.vm.provision "shell", inline: <<-SHELL
             # Set hostname
             sudo hostnamectl set-hostname n2
-        EOF
+        SHELL
 
         # Network configuration
         node.vm.network "private_network", ip: "192.168.0.22"
