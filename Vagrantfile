@@ -80,8 +80,8 @@ EOF
 
             # Update the package index and install kubeadm, kubelet, and kubectl.
             sudo apt-get update
-            sudo apt-get install -y kubelet kubectl
-            sudo apt-mark hold kubelet kubectl
+            sudo apt-get install -y kubelet kubeadm kubectl
+            sudo apt-mark hold kubelet kubeadm kubectl
 
             # Enable and start the kubelet service.
             sudo systemctl enable --now kubelet
@@ -110,13 +110,6 @@ EOF
         cp.vm.provision "shell", inline: <<-SHELL
             # Set hostname
             sudo hostnamectl set-hostname control-plane
-
-            # Install kubeadm
-            # ------------------------------------
-            if [ -z "$(which kubeadm)" ]; then
-                sudo apt-get install -y kubeadm
-                sudo apt-mark hold kubeadm
-            fi
         SHELL
     end
 
