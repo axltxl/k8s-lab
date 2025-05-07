@@ -1,0 +1,23 @@
+# Kubernetes Cluster Init Configuration
+# This file is used to initialize a Kubernetes cluster using kubeadm.
+# It contains the configuration for the control plane node.
+# ----------------------------------------------------------------
+
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: 192.168.0.11
+  bindPort: 6443
+
+---
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: ClusterConfiguration
+apiServer:
+  # Certificate Subject Alternative Names (SANs)
+  # The certificate issued for the API server will include these SANs
+  # This is important for the API server to be reachable via these addresses
+  # and for clients to trust the certificate.
+  certSANs:
+    - "192.168.0.11" # internal IP address (see K8S_API_SERVER_ENDPOINT in Vagrantfile)
+    - "10.0.2.15" # IP address of the default NAT interface made by Vagrant (see Vagrantfile)
+    - "control-plane.local" # generic name for the control plane node (this can be used for mapping any IP address to a name)

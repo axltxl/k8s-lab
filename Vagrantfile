@@ -1,4 +1,5 @@
 # Variables
+# ------------------------------------
 @vm_box = "bento/ubuntu-24.04"
 @vm_box_version = "202502.21.0"
 @vm_cpus = 2
@@ -119,7 +120,10 @@ EOF
                 # Initialize the Kubernetes cluster
                 # (TLS PKI is generated automatically at /etc/kubernetes/pki)
                 # ------------------------------------
-                sudo kubeadm init
+                # see: files/remote/kubeadm/kubeadm-config.yaml for details
+                # on how the cluster is being configured
+                # (e.g. pod network CIDR, certificate SANs, etc.)
+                sudo kubeadm init --config /vagrant/files/remote/k8s/kubeadm-config.yaml
             fi
 
             # Configure kubectl for the vagrant user
