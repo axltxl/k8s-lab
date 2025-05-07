@@ -88,7 +88,6 @@ EOF
         # Restart services regardless of the state
         # (in this way, we make sure services are running with the latest configuration)
         sudo systemctl restart containerd
-        sudo systemctl restart kubelet
     SHELL
 
     # Control plane
