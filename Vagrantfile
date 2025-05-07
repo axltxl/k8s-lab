@@ -5,6 +5,10 @@
 @vm_memory = "3184"
 @k8s_num_worker_nodes = 1
 
+# Constants
+# ------------------------------------
+K8S_API_SERVER_IP = "192.168.0.11" # Control plane host IP
+
 Vagrant.configure("2") do |config|
 
     config.vm.box = @vm_box
@@ -97,8 +101,9 @@ EOF
         cp.vm.box_version = @vm_box_version
 
         # Network configuration
-        cp.vm.network "private_network", ip: "192.168.0.11"
+        cp.vm.network "private_network", ip: K8S_API_SERVER_IP
 
+        # Resource configuration
         cp.vm.provider "virtualbox" do |vb|
             vb.memory = @vm_memory
             vb.cpus = @vm_cpus
