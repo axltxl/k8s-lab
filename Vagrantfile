@@ -108,11 +108,24 @@ EOF
             # Set hostname
             sudo hostnamectl set-hostname control-plane
 
+            # Bootstrapping the Kubernetes control plane
+            # ------------------------------------
             if [ ! -d /etc/kubernetes/pki ]; then
                 # Initialize the Kubernetes cluster
                 # (TLS PKI is generated automatically at /etc/kubernetes/pki)
                 # ------------------------------------
                 sudo kubeadm init
+            fi
+
+            # Configure kubectl for the vagrant user
+            # ------------------------------------
+            if [ ! -f /home/vagrant/.kube/config ]; then
+                # Create the .kube directory
+                mkdir -p /home/vagrant/.kube
+                # Copy the admin.conf file to the .kube directory
+                sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+                # Set the ownership of the .kube directory and its contents to the vagrant user
+                sudo chown -R vagrant:vagrant /home/vagrant/.kube
             fi
         SHELL
     end
