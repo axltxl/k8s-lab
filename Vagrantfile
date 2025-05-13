@@ -140,6 +140,14 @@ EOF
                 sudo chown -R vagrant:vagrant /home/vagrant/.kube
             fi
 
+            # Set up kubelet flags
+            cat << EOF | sudo tee /etc/default/kubelet > /dev/null
+KUBELET_EXTRA_ARGS="--node-ip=#{K8S_API_SERVER_IP}"
+EOF
+
+            # Restart kubelet service
+            sudo systemctl restart kubelet
+
 
             # Explicitly set the KUBECONFIG environment variable
             # (otherwise kubectl will not work, even if the config file is in the right place)
@@ -179,10 +187,23 @@ EOF
     # Worker nodes
     # ----
     (1..@k8s_num_worker_nodes).each do |i|
+
+        # Define the worker node IP address
+        k8s_node_ip = "192.168.0.2#{i}"
+
         config.vm.define "n#{i}" do |node|
             node.vm.provision "shell", inline: <<-SHELL
                 # Set hostname
                 sudo hostnamectl set-hostname n#{i}
+
+                # Set up kubelet flags
+                cat << EOF | sudo tee /etc/default/kubelet > /dev/null
+KUBELET_EXTRA_ARGS="--node-ip=#{k8s_node_ip}"
+EOF
+
+
+                # Restart kubelet service
+                sudo systemctl restart kubelet
 
                 # Join the Kubernetes cluster
                 # ------------------------------------
