@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         # This is the todod Pod
-        - name: todod
+        - name: todod-pod
           image: k8s-lab/todod:latest
           # Since the todod container image
           # gets built inside minikube's docker daemon
@@ -28,6 +28,9 @@ spec:
           ports:
             - containerPort: 8000
           resources:
-            limits:
+            requests:
               memory: 64Mi
               cpu: 10m
+            limits:
+              memory: 128Mi
+              cpu: 100m

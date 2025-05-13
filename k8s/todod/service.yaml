@@ -8,7 +8,7 @@ metadata:
   namespace: k8s-lab
 spec:
   selector:
-    app: todod
+    app: todod-pod
   type: NodePort
   ports:
     - name: todod-svc
