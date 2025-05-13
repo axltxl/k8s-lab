@@ -19,6 +19,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provider "virtualbox" do |vb|
         vb.cpus = @vm_cpus
+        vb.gui = true
     end
 
     # General provisioning
