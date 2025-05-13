@@ -161,7 +161,9 @@ EOF
                 # Install Cilium CNI plugin
                 # ------------------------------------
                 cilium install \
-                    --set ipam.operator.clusterPoolIPv4PodCIDRList='#{K8S_CNI_NETWORK_CIDR}'
+                    --set ipam.operator.clusterPoolIPv4PodCIDRList='#{K8S_CNI_NETWORK_CIDR}' \
+                    --set k8sServiceHost=#{K8S_API_SERVER_IP} \
+                    --set k8sServicePort=6443
             fi
 
             # Generate the join command for worker nodes into a script
