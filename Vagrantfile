@@ -4,7 +4,7 @@
 @vm_box_version = "202502.21.0"
 @vm_cpus = 2
 @vm_memory_worker_nodes = "2048"
-@vm_memory_control_plane = "4096"
+@vm_memory_control_plane = "2048"
 @k8s_num_worker_nodes = 1
 
 # Constants
