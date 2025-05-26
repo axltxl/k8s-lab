@@ -181,6 +181,19 @@ EOF
             kubeadm token create --print-join-command > $k8s_node_join_script
             chmod +x $k8s_node_join_script
 
+            # Install kubeadduser: an utility script to add users to the cluster
+            # ------------------------------------
+            if [ ! -f /usr/local/bin/kubeadduser ]; then
+                sudo cp /vagrant/scripts/remote/k8s/kubeadduser /usr/local/bin/kubeadduser
+                sudo chmod +x /usr/local/bin/kubeadduser
+            fi
+
+            # Create a default admin user for the cluster
+            # This will create a kubeconfig for the k8s-lab-admin user
+            # whose credentials will be store in: /vagrant/files/local/k8s/users
+            # and can be used to access the cluster
+            # ------------------------------------
+            kubeadduser #{K8S_API_SERVER_IP}
         SHELL
     end
 

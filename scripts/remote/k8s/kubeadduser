@@ -1,0 +1,54 @@
+#!/bin/bash
+# This script adds a user to the Kubernetes cluster with the admin role.
+set -e
+
+K8S_API_SERVER_IP=$1
+
+if [ -z "$K8S_API_SERVER_IP" ]; then
+    echo "Usage: $0 <K8S_API_SERVER_IP>"
+    exit 1
+fi
+
+cd /vagrant/files/local/k8s/users
+rm -rf k8s-lab-admin* # Clean up previous files
+
+# Generate the user's kubeconfig file
+# ------------------------------------
+# 1. Generate a Private Key and Certificate Signing Request (CSR)
+echo "Generating CSR and Private Key for admin..."
+openssl genrsa -out k8s-lab-admin.key 2048
+openssl req -new -key k8s-lab-admin.key -out k8s-lab-admin.csr -subj "/CN=k8s-lab-admin/O=k8s-lab"
+
+# 2. Sign the CSR with the Cluster CA
+echo "Signing the CSR with the Cluster CA..."
+sudo openssl x509 -req -in k8s-lab-admin.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key \
+    -CAcreateserial -out k8s-lab-admin.crt -days 365
+chown vagrant:vagrant k8s-lab-admin.crt
+
+# 3. Create a kubeconfig file for the user
+echo "Creating kubeconfig file for k8s-lab-admin..."
+kubectl config set-credentials k8s-lab-admin \
+--client-certificate=k8s-lab-admin.crt \
+--client-key=k8s-lab-admin.key \
+--embed-certs=true \
+--kubeconfig=k8s-lab-admin.kubeconfig
+
+kubectl config set-cluster k8s-lab-cluster \
+"--server=https://${K8S_API_SERVER_IP}:6443" \
+--certificate-authority=/etc/kubernetes/pki/ca.crt \
+--embed-certs=true \
+--kubeconfig=k8s-lab-admin.kubeconfig
+
+kubectl config set-context k8s-lab-context \
+--cluster=k8s-lab-cluster \
+--user=k8s-lab-admin \
+--kubeconfig=k8s-lab-admin.kubeconfig
+
+kubectl config use-context k8s-lab-context --kubeconfig=k8s-lab-admin.kubeconfig
+
+
+# 4. Apply the RBAC configuration to give the user admin privileges
+echo "Applying RBAC configuration for k8s-lab-admin..."
+kubectl apply -f /vagrant/files/remote/k8s/k8s-lab-admin-rbac.yaml
+
+echo "Kubernetes user 'k8s-lab-admin' created successfully."
