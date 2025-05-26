@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        // Docker
+        "ms-azuretools.vscode-docker",
+        "golang.go",
+        // Kubernetes
+        "ms-kubernetes-tools.vscode-kubernetes-tools"
+    ]
+}
