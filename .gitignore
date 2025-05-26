@@ -1,8 +1,5 @@
 # Golang
 __debug_bin
 
-# Enviroment files
-.env
-
 # vagrant
 .vagrant
