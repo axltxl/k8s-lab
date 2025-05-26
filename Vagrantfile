@@ -221,7 +221,9 @@ EOF
                 # Join the Kubernetes cluster
                 # (see: control-plane provisioning for details)
                 # ------------------------------------
-                sudo /vagrant/scripts/remote/temp/k8s_node_join.sh
+                if [ ! -d /etc/kubernetes/pki ]; then
+                    sudo /vagrant/scripts/remote/temp/k8s_node_join.sh
+                fi
             SHELL
 
             # Network configuration
