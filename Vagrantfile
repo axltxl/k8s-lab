@@ -5,7 +5,7 @@
 @vm_cpus = 2
 @vm_memory_worker_nodes = "2048"
 @vm_memory_control_plane = "2048"
-@k8s_num_worker_nodes = 1
+@k8s_num_worker_nodes = 2
 
 # Constants
 # ------------------------------------
