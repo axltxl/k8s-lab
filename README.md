@@ -1,34 +1,53 @@
 # k8s-lab
 
+A not-so-lightweight-but-close-to-the-metal Kubernetes development environment designed for learning, testing, and experimentation.
+
+k8s-lab sets up a local multi-node Kubernetes cluster using Vagrant and Cilium. Ideal for those who want to explore Kubernetes in a reproducible and isolated setup as close as bare metal as I can get.
+
 ## Requirements
+
 - [golang](https://golang.org)
 - [docker](https://docker.com)
-- [`kubectl`](https://kubernetes.io)
-- [`minikube`](https://minikube.sigs.k8s.io/)
+- [kubectl](https://kubernetes.io)
+- [vagrant](https://vagrantup.com)
 
 ## How to
 
 ### Local development
+
 ####
+
 `go run src/cmd/todo/main.go`
 
 ### Docker
 
-###
 `docker-compose up`
 
 ### Kubernetes
+
+### Set up cluster
+
+First, start with creating the cluster from scratch
+
+```
+vagrant up # Create and set up k8s cluster from scratch
+```
+
+The latter will create the following (see: `Vagrantfile`):
+
+- a control plane host + 2 worker nodes by default
+  - CNI plugin of choice: [cilium](https://docs.cilium.io)
+  - Pod network CIDR: `172.16.0.0/16`
+- an `k8s-lab-admin` user set of credentials, which will be available at `files/local/k8s/users`
+  - An `.env` file has been provided that sets `KUBECONFIG` to these credentials
+  - This project configures [vs-kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools) extension to use the cluster right out of the gate with the `k8s-lab-admin` user
+
 #### Apply all manifests
+
 `kubectl apply --recursive -f k8s`
 
-
-### `minikube`
-`minikube start --driver=kyperkit`
-`scripts/k8s/minikube/build_images.sh`
-`curl $(minikube ip):<svc_port>`
-
-
 ## Copyright and Licensing
+
 Copyright (c) 2021 Alejandro Ricoveri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
