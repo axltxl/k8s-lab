@@ -1,6 +1,8 @@
 # k8s-lab
 
-A not-so-lightweight-but-close-to-the-metal Kubernetes development environment designed for learning, testing, and experimentation.
+![k8s-lab demo](files/local/images/README.png)
+
+A not-so-lightweight-but-close-to-the-metal Kubernetes ⚓ development environment designed for learning, testing, and experimentation 👨‍💻.
 
 k8s-lab sets up a local multi-node Kubernetes cluster using Vagrant and Cilium. Ideal for those who want to explore Kubernetes in a reproducible and isolated setup as close as bare metal as I can get.
 
@@ -13,21 +15,21 @@ k8s-lab sets up a local multi-node Kubernetes cluster using Vagrant and Cilium. 
 
 ## How to
 
-### Local development
+### 👨‍💻Local development of services
 
 ####
 
 `go run src/cmd/todo/main.go`
 
-### Docker
+### 🚢 Docker-based development of services
 
 `docker-compose up`
 
-### Kubernetes
+### ⚓ Kubernetes
 
-### Set up cluster
+### Set up cluster 🧰
 
-First, start with creating the cluster from scratch
+First, start with creating the cluster from scratch 🔨
 
 ```
 vagrant up # Create and set up k8s cluster from scratch
@@ -36,6 +38,7 @@ vagrant up # Create and set up k8s cluster from scratch
 The latter will create the following (see: `Vagrantfile`):
 
 - a control plane host + 2 worker nodes by default
+  - OS of choice: Ubuntu Server 24.04
   - CNI plugin of choice: [cilium](https://docs.cilium.io)
   - Pod network CIDR: `172.16.0.0/16`
 - an `k8s-lab-admin` user set of credentials, which will be available at `files/local/k8s/users`
