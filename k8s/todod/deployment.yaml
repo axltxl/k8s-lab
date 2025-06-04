@@ -19,12 +19,7 @@ spec:
         # This is the todod Pod
         - name: todod-pod
           image: 192.168.0.11:5000/k8s-lab/todod:latest
-          # Since the todod container image
-          # gets built inside minikube's docker daemon
-          # then, we need to make sure that this cluster
-          # takes the local image everytime
-          # source:
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           resources:
