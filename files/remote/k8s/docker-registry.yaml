@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: kube-system
+  name: docker-registry
+spec:
+  hostNetwork: true
+  containers:
+  - name: docker-registry
+    image: docker.io/registry:2
+    imagePullPolicy: IfNotPresent
+    # not ideal, but for the sake of simplicity
+    # this is the most straightforward way to run a registry
+    hostNetwork : true
+    ports:
+    - containerPort: 5000
+      hostPort: 5000
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
