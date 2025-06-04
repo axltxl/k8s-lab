@@ -7,7 +7,7 @@
 @vm_memory_control_plane = "2048"
 @k8s_num_worker_nodes = 2
 
-# Constants
+# Constants (DO NOT CHANGE THESE)
 # ------------------------------------
 K8S_API_SERVER_IP = "192.168.0.11" # Control plane host IP
 K8S_CNI_NETWORK_CIDR = "172.16.0.0/16" # Pod network CIDR
