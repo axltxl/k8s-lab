@@ -6,14 +6,8 @@ set -e
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd $SCRIPT_DIR/../../..
 
-# Make sure docker client is pointing to minikube's docker daemon
-# Reasoning behind this: it'd be honestly stupid to have to push
-# images to a docker registry and let minikube to pull them afterwards.
-# Instead, docker images are built inside minikube's own docker daemon
-# to have them "locally" available.
-eval $(minikube -p minikube docker-env)
-
 # Build and tag the images
-docker build . -t k8s-lab/todod
+docker build . -t 192.168.0.11:5000/k8s-lab/todod
+docker push 192.168.0.11:5000/k8s-lab/todod
 
 
