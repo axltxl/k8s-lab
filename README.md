@@ -27,7 +27,17 @@ k8s-lab sets up a local multi-node Kubernetes cluster using Vagrant and Cilium. 
 
 ### ⚓ Kubernetes
 
-### Set up cluster 🧰
+#### Set up your local Docker client🚢
+
+The cluster's control-plane host will also run a vanilla docker registry, with no TLS. Therefore it's necessary to configure your docker client to allow plain HTTP communication with the docker registry, this is done in the `/etc/docker/daemon.json` like so:
+
+```json
+{
+  "insecure-registries": ["192.168.0.11:5000"]
+}
+```
+
+#### Set up k8s cluster 🧰
 
 First, start with creating the cluster from scratch 🔨
 
@@ -40,6 +50,7 @@ The latter will create the following (see: `Vagrantfile`):
 - a control plane host + 2 worker nodes by default
   - OS of choice: Ubuntu Server 24.04
   - CNI plugin of choice: [cilium](https://docs.cilium.io)
+  - VM network CIDR: `192.168.0.0/24`
   - Pod network CIDR: `172.16.0.0/16`
 - an `k8s-lab-admin` user set of credentials, which will be available at `files/local/k8s/users`
   - An `.env` file has been provided that sets `KUBECONFIG` to these credentials
