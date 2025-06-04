@@ -16,5 +16,8 @@
   "vs-kubernetes": {
     "vs-kubernetes.namespace": "k8s-lab",
     "vs-kubernetes.kubeconfig": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig",
+    "vs-kubernetes.applyManifests": [
+      "${workspaceFolder}/k8s/"
+    ]
   }
 }
