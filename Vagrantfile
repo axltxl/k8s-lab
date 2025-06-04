@@ -51,17 +51,17 @@ Vagrant.configure("2") do |config|
             sudo apt-get update
             sudo apt-get install containerd.io
 
-            # Configure containerd
-            # ------------------------------------
-            sudo mkdir -p /etc/containerd
-            sudo cp /vagrant/files/remote/containerd/config.toml /etc/containerd/config.toml
-
             # disable a bug in ubuntu 22.04
             # which prevents you from deleting pods
             # -------------------------------------
             sudo systemctl stop apparmor.service
             sudo systemctl disable apparmor.service
         fi
+
+        # Configure containerd
+        # ------------------------------------
+        sudo mkdir -p /etc/containerd
+        sudo cp /vagrant/files/remote/containerd/config.toml /etc/containerd/config.toml
 
         # Enable IPv4 forwarding
         # ------------------------------------
@@ -194,6 +194,11 @@ EOF
             # and can be used to access the cluster
             # ------------------------------------
             kubeadduser #{K8S_API_SERVER_IP}
+
+            # Install the docker-registry static pod
+            # ------------------------------------
+            sudo cp /vagrant/files/remote/k8s/docker-registry.yaml /etc/kubernetes/manifests/docker-registry.yaml
+            sudo chmod 600 /etc/kubernetes/manifests/docker-registry.yaml
         SHELL
     end
 
