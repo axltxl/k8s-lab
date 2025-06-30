@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todod-deploy
-  namespace: k8s-lab
+  namespace: todo
 spec:
   replicas: 3
   selector:
