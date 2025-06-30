@@ -1,7 +1,7 @@
-- Reorganize monorepo
+- Reorganize monorepo [x]
   - todod: in apps/todod/api [x]
+- Isolate todod app in its own namespace
 - Set up Ingress
 - Set up Ingress controller
-- Isolate todod app in its own namespace
 - Patch the Ingress with the todod API
 - set up initial Makefile
