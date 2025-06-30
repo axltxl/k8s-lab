@@ -1,4 +1,4 @@
-module github.com/axltxl/k8s-lab
+module github.com/axltxl/k8s-lab/apps/todo/api
 
 go 1.16
 

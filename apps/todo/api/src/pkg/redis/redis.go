@@ -26,8 +26,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/axltxl/k8s-lab/src/pkg/config"
-	"github.com/axltxl/k8s-lab/src/pkg/list"
+	"github.com/axltxl/k8s-lab/apps/todo/api/src/pkg/config"
+	"github.com/axltxl/k8s-lab/apps/todo/api/src/pkg/list"
 	"github.com/go-redis/redis/v8"
 )
 

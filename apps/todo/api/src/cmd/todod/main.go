@@ -23,7 +23,7 @@ package main
 import (
 	"log"
 
-	"github.com/axltxl/k8s-lab/src/pkg/server"
+	"github.com/axltxl/k8s-lab/apps/todo/api/src/pkg/server"
 )
 
 func main() {

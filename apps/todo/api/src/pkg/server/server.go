@@ -30,10 +30,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/axltxl/k8s-lab/src/pkg/config"
-	"github.com/axltxl/k8s-lab/src/pkg/list"
-	"github.com/axltxl/k8s-lab/src/pkg/redis"
-	"github.com/axltxl/k8s-lab/src/pkg/uuid"
+	"github.com/axltxl/k8s-lab/apps/todo/api/src/pkg/config"
+	"github.com/axltxl/k8s-lab/apps/todo/api/src/pkg/list"
+	"github.com/axltxl/k8s-lab/apps/todo/api/src/pkg/redis"
+	"github.com/axltxl/k8s-lab/apps/todo/api/src/pkg/uuid"
 )
 
 // Start web server
