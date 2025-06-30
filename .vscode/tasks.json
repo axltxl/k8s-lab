@@ -19,7 +19,7 @@
     {
       "label": "k8s/docker/build_images",
       "type": "shell",
-      "command": "scripts/k8s/build_images.ps1",
+      "command": "scripts/local/k8s/build_images.ps1",
     },
     {
       "label": "k8s/apply",
