@@ -1,3 +1,4 @@
-Install docker-registry in control plane
-
-- It should be a static pod set up in the control plane
+- Set up Ingress
+- Set up Ingress controller
+- Isolate todod app in its own namespace
+- Patch the Ingress with the todod API
