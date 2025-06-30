@@ -4,17 +4,22 @@
     {
       "label": "k8s/set_ctx",
       "type": "process",
+      "options": {
+        "env": {
+          "KUBECONFIG": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig"
+        },
+      },
       "command": "kubectl",
       "args": [
         "config",
         "set-context",
-        "minikube"
+        "k8s-lab-context"
       ]
     },
     {
       "label": "k8s/docker/build_images",
       "type": "shell",
-      "command": "scripts/k8s/minikube/build_images.sh",
+      "command": "scripts/k8s/build_images.ps1",
     },
     {
       "label": "k8s/apply",
@@ -27,7 +32,10 @@
         "k8s"
       ],
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "KUBECONFIG": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig"
+        }
       },
       "dependsOrder": "sequence",
       "dependsOn": [
