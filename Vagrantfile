@@ -326,7 +326,6 @@ EOF
 KUBELET_EXTRA_ARGS="--node-ip=#{k8s_node_ip}"
 EOF
 
-
                 # Restart kubelet service
                 sudo systemctl restart kubelet
 

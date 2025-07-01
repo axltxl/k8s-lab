@@ -8,7 +8,7 @@ metadata:
 spec:
   addresses:
   # FIXME: doc me
-  - 192.168.0.100-192.168.0.128
+  - "{{ k8s_load_balancer_ip }}/32"
   autoAssign: true
 ---
 apiVersion: metallb.io/v1beta1

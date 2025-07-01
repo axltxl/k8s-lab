@@ -5,7 +5,10 @@ __debug_bin
 .vagrant
 
 # jinja2-generated files
+# (see: scripts/remote/j2.py)
 files/remote/k8s/kubeadm-config.yaml
+files/remote/k8s/metallb-config.yaml
+files/remote/containerd/config.toml
 
 # config file
 config.yaml
