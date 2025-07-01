@@ -3,3 +3,9 @@ __debug_bin
 
 # vagrant
 .vagrant
+
+# jinja2-generated files
+files/remote/k8s/kubeadm-config.yaml
+
+# config file
+config.yaml
