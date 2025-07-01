@@ -53,6 +53,18 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: <<-SHELL
         sudo apt-get update -y
 
+        # Install basic tooling
+        # ------------------------------------
+        sudo apt-get install -y \
+            python3 \
+            python3-pip
+
+        # Install Python packages
+        # ------------------------------------
+        sudo pip3 install -r /vagrant/scripts/remote/requirements.txt
+        sudo cp /vagrant/scripts/remote/j2.py /usr/local/bin/j2
+        sudo chmod +x /usr/local/bin/j2
+
         # Disable swap partition
         # source: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#swap-configuration
         sudo swapoff -a
@@ -88,7 +100,9 @@ Vagrant.configure("2") do |config|
         # Configure containerd
         # ------------------------------------
         sudo mkdir -p /etc/containerd
-        sudo cp /vagrant/files/remote/containerd/config.toml /etc/containerd/config.toml
+        # FIXME: remove me
+        # sudo cp /vagrant/files/remote/containerd/config.toml /etc/containerd/config.toml
+        j2 /vagrant/config.yaml /vagrant/files/remote/containerd/config.toml.j2 | sudo tee /etc/containerd/config.toml > /dev/null
 
         # Enable IPv4 forwarding
         # ------------------------------------
@@ -153,6 +167,7 @@ EOF
                 # see: files/remote/kubeadm/kubeadm-config.yaml for details
                 # on how the cluster is being configured
                 # (e.g. pod network CIDR, certificate SANs, etc.)
+                j2 /vagrant/config.yaml /vagrant/files/remote/k8s/kubeadm-config.yaml.j2 > /vagrant/files/remote/k8s/kubeadm-config.yaml
                 sudo kubeadm init --config /vagrant/files/remote/k8s/kubeadm-config.yaml
 
             fi
