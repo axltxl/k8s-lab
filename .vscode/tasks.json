@@ -2,6 +2,55 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "vagrant/up",
+      "type": "shell",
+      "command": "vagrant",
+      "args": [
+        "up"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "vagrant/halt",
+      "type": "shell",
+      "command": "vagrant",
+      "args": [
+        "halt"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "vagrant/destroy",
+      "type": "shell",
+      "command": "vagrant",
+      "args": [
+        "destroy",
+        "-f"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "k8s/vagrant/halt",
+      "type": "shell",
+      "command": "vagrant",
+      "args": [
+        "halt"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/files/local/k8s"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "k8s/set_ctx",
       "type": "process",
       "options": {
