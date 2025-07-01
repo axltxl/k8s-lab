@@ -314,7 +314,7 @@ EOF
     (1..@k8s_num_worker_nodes).each do |i|
 
         # Define the worker node IP address
-        k8s_node_ip = "192.168.0.2#{i}"
+        k8s_node_ip = "#{k8s_worker_node_ips[i - 1]}"
 
         config.vm.define "n#{i}" do |node|
             node.vm.provision "shell", inline: <<-SHELL
