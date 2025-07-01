@@ -1,16 +1,43 @@
+# read configuration from YAML file
+require 'yaml'
+# Load the configuration file
+config_file = File.join(File.dirname(__FILE__), 'config.yaml')
+if File.exist?(config_file)
+  @config = YAML.load_file(config_file)
+else
+  puts "Configuration file not found: #{config_file}"
+  exit 1
+end
+
+def config_get_key_or_die(config, key)
+    if config.key?(key)
+        puts "Using #{key} from config: #{config[key]}"
+        return config[key]
+    else
+        puts "#{key}: not found in config.yaml"
+        exit 1
+    end
+end
+
 # Variables
 # ------------------------------------
 @vm_box = "bento/ubuntu-24.04"
 @vm_box_version = "202502.21.0"
-@vm_cpus = 2
-@vm_memory_worker_nodes = "2048"
-@vm_memory_control_plane = "2048"
-@k8s_num_worker_nodes = 2
+@vm_cpus = @config['vm_cpus'] || 2
+@vm_memory_worker_nodes = @config['vm_mem_workers'] || "2048" # 2GB
+@vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
+@k8s_num_worker_nodes = @config['k8s_num_workers'] || 0 # Number of worker nodes (default: 0)
+@k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
+@k8s_network_bridge_interface = config_get_key_or_die(@config, 'k8s_network_bridge_interface') # Network bridge interface
+@k8s_cni_network_cidr = @config['k8s_cni_network_cidr'] || "172.16.0.0/16" # Pod network CIDR
 
 # Constants (DO NOT CHANGE THESE)
 # ------------------------------------
-K8S_API_SERVER_IP = "192.168.0.11" # Control plane host IP
-K8S_CNI_NETWORK_CIDR = "172.16.0.0/16" # Pod network CIDR
+# FIXME
+# K8S_API_SERVER_IP = "192.168.64.100" # Control plane host IP
+# K8S_API_SERVER_IP = "192.168.64.100"
+# K8S_NETWORK_BRIDGE_INTERFACE="Intel(R) Wi-Fi 6 AX200 160 MHz"
+# K8S_CNI_NETWORK_CIDR = "172.16.0.0/16" # Pod network CIDR
 
 Vagrant.configure("2") do |config|
 
@@ -105,7 +132,8 @@ EOF
         cp.vm.box_version = @vm_box_version
 
         # Network configuration
-        cp.vm.network "private_network", ip: K8S_API_SERVER_IP
+        # cp.vm.network "private_network", ip: K8S_API_SERVER_IP
+        cp.vm.network "public_network", ip: @k8s_api_server_ip, bridge: @k8s_network_bridge_interface
 
         # Resource configuration
         cp.vm.provider "virtualbox" do |vb|
@@ -142,7 +170,7 @@ EOF
 
             # Set up kubelet flags
             cat << EOF | sudo tee /etc/default/kubelet > /dev/null
-KUBELET_EXTRA_ARGS="--node-ip=#{K8S_API_SERVER_IP}"
+KUBELET_EXTRA_ARGS="--node-ip=#{@k8s_api_server_ip}"
 EOF
 
             # Restart kubelet service
@@ -169,8 +197,8 @@ EOF
                 # Install Cilium CNI plugin
                 # ------------------------------------
                 cilium install \
-                    --set ipam.operator.clusterPoolIPv4PodCIDRList='#{K8S_CNI_NETWORK_CIDR}' \
-                    --set k8sServiceHost=#{K8S_API_SERVER_IP} \
+                    --set ipam.operator.clusterPoolIPv4PodCIDRList='#{@k8s_cni_network_cidr}' \
+                    --set k8sServiceHost=#{@k8s_api_server_ip} \
                     --set k8sServicePort=6443
             fi
 
@@ -193,7 +221,7 @@ EOF
             # whose credentials will be store in: /vagrant/files/local/k8s/users
             # and can be used to access the cluster
             # ------------------------------------
-            kubeadduser #{K8S_API_SERVER_IP}
+            kubeadduser #{@k8s_api_server_ip}
 
             # Install the docker-registry static pod
             # ------------------------------------
@@ -267,7 +295,9 @@ EOF
             SHELL
 
             # Network configuration
-            node.vm.network "private_network", ip: k8s_node_ip
+            # FIXME
+            # node.vm.network "private_network", ip: k8s_node_ip
+            node.vm.network "public_network", ip: k8s_node_ip, bridge: @k8s_network_bridge_interface
 
             # Resource configuration
             node.vm.provider "virtualbox" do |vb|
