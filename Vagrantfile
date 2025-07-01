@@ -30,6 +30,34 @@ end
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
 @k8s_network_bridge_interface = config_get_key_or_die(@config, 'k8s_network_bridge_interface') # Network bridge interface
 @k8s_cni_network_cidr = @config['k8s_cni_network_cidr'] || "172.16.0.0/16" # Pod network CIDR
+@k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
+
+@k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
+
+# Check if the number of worker nodes is valid
+if @k8s_num_worker_nodes < 0 || @k8s_num_worker_nodes > 10
+    puts "Invalid number of worker nodes: #{@k8s_num_worker_nodes}. Must be between 0 and 10."
+    exit 1
+end
+
+# Check if the worker node IPs are provided when the number of worker nodes is greater than 0
+if @k8s_num_worker_nodes > 0 && @k8s_worker_node_ips.empty?
+    puts "Worker node IPs must be provided when the number of worker nodes is greater than 0."
+    exit 1
+end
+
+# Check if the worker node IPs match the number of worker nodes
+if @k8s_num_worker_nodes > 0 && @k8s_worker_node_ips.size != @k8s_num_worker_nodes
+    puts "Number of worker node IPs provided (#{@k8s_worker_node_ips.size}) does not match the number of worker nodes (#{@k8s_num_worker_nodes})."
+    exit 1
+end
+
+# Check if worker node IPs match the number of worker nodes
+if @k8s_num_worker_nodes > 0 && @k8s_worker_node_ips.size != @k8s_num_worker_nodes
+    puts "Number of worker node IPs provided (#{@k8s_worker_node_ips.size}) does not match the number of worker nodes (#{@k8s_num_worker_nodes})."
+    puts "Setting the number of worker nodes to #{@k8s_worker_node_ips.size}."
+    @k8s_num_worker_nodes = @k8s_worker_node_ips.size
+end
 
 # Constants (DO NOT CHANGE THESE)
 # ------------------------------------
