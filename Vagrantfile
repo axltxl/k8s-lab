@@ -210,6 +210,30 @@ EOF
                 sudo apt-get install helm
             fi
 
+            # Install MetalLB (load balancer)
+            # ------------------------------------
+            # If you’re using kube-proxy in IPVS mode, since Kubernetes v1.14.2 you have to enable strict ARP mode.
+            # source: https://metallb.universe.tf/installation/#preparation
+            kubectl get configmap kube-proxy -n kube-system -o yaml | \
+            sed -e "s/strictARP: false/strictARP: true/" | \
+            kubectl apply -f - -n kube-system
+
+            # Actually install MetalLB (via Helm)
+            # helm repo add metallb https://metallb.github.io/metallb
+            # helm install metallb metallb/metallb
+            helm upgrade --install metallb metallb \
+            --repo https://metallb.github.io/metallb \
+            --namespace metallb-system --create-namespace
+
+
+            # FIXME: doc me
+            kubectl apply -f /vagrant/files/remote/k8s/metallb-config.yaml
+
+            # Install the Ingress controller (nginx)
+            # ------------------------------------
+            helm upgrade --install ingress-nginx ingress-nginx \
+            --repo https://kubernetes.github.io/ingress-nginx \
+            --namespace ingress-nginx --create-namespace
         SHELL
     end
 
