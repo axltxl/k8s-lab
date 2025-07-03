@@ -26,7 +26,7 @@ end
 @vm_cpus = @config['vm_cpus'] || 2
 @vm_memory_worker_nodes = @config['vm_mem_workers'] || "2048" # 2GB
 @vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
-@k8s_num_worker_nodes = @config['k8s_num_workers'] || 0 # Number of worker nodes (default: 0)
+@k8s_num_worker_nodes = @config['k8s_num_worker_nodes'] || 0 # Number of worker nodes (default: 0)
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
 @k8s_network_bridge_interface = config_get_key_or_die(@config, 'k8s_network_bridge_interface') # Network bridge interface
 @k8s_cni_network_cidr = @config['k8s_cni_network_cidr'] || "172.16.0.0/16" # Pod network CIDR
