@@ -2,10 +2,11 @@
 
 # Root directory
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Definition
-Set-Location -Path (Join-Path $SCRIPT_DIR "..\..\apps")
+Set-Location -Path (Join-Path $SCRIPT_DIR "..\..\..")
 
-cd todod\api
+cd .\apps\todo\api
 
 # Build and tag the images
-docker build . -t 192.168.0.11:5000/k8s-lab/todod
-docker push 192.168.0.11:5000/k8s-lab/todod
+# FIXME
+docker build . -t 192.168.64.100:5000/k8s-lab/todod
+docker push 192.168.64.100:5000/k8s-lab/todod
