@@ -58,14 +58,6 @@ if @k8s_num_worker_nodes > 0 && @k8s_worker_node_ips.size != @k8s_num_worker_nod
     @k8s_num_worker_nodes = @k8s_worker_node_ips.size
 end
 
-# Constants (DO NOT CHANGE THESE)
-# ------------------------------------
-# FIXME
-# K8S_API_SERVER_IP = "192.168.64.100" # Control plane host IP
-# K8S_API_SERVER_IP = "192.168.64.100"
-# K8S_NETWORK_BRIDGE_INTERFACE="Intel(R) Wi-Fi 6 AX200 160 MHz"
-# K8S_CNI_NETWORK_CIDR = "172.16.0.0/16" # Pod network CIDR
-
 Vagrant.configure("2") do |config|
 
     config.vm.box = @vm_box
