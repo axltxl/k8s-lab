@@ -28,7 +28,6 @@ end
 @vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
 @k8s_num_worker_nodes = @config['k8s_num_worker_nodes'] || 0 # Number of worker nodes (default: 0)
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
-@k8s_network_bridge_interface = config_get_key_or_die(@config, 'k8s_network_bridge_interface') # Network bridge interface
 @k8s_cni_network_cidr = @config['k8s_cni_network_cidr'] || "172.16.0.0/16" # Pod network CIDR
 @k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
 
@@ -174,8 +173,7 @@ EOF
         cp.vm.box_version = @vm_box_version
 
         # Network configuration
-        # cp.vm.network "private_network", ip: K8S_API_SERVER_IP
-        cp.vm.network "public_network", ip: @k8s_api_server_ip, bridge: @k8s_network_bridge_interface
+        cp.vm.network "private_network", ip: @k8s_api_server_ip
 
         # Resource configuration
         cp.vm.provider "virtualbox" do |vb|
@@ -314,7 +312,7 @@ EOF
     (1..@k8s_num_worker_nodes).each do |i|
 
         # Define the worker node IP address
-        k8s_node_ip = "#{k8s_worker_node_ips[i - 1]}"
+        k8s_node_ip = "#{@k8s_worker_node_ips[i - 1]}"
 
         config.vm.define "n#{i}" do |node|
             node.vm.provision "shell", inline: <<-SHELL
@@ -339,8 +337,7 @@ EOF
 
             # Network configuration
             # FIXME
-            # node.vm.network "private_network", ip: k8s_node_ip
-            node.vm.network "public_network", ip: k8s_node_ip, bridge: @k8s_network_bridge_interface
+            node.vm.network "private_network", ip: k8s_node_ip
 
             # Resource configuration
             node.vm.provider "virtualbox" do |vb|
