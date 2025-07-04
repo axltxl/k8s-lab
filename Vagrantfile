@@ -23,7 +23,8 @@ end
 # ------------------------------------
 @vm_box = "bento/ubuntu-24.04"
 @vm_box_version = "202502.21.0"
-@vm_cpus = @config['vm_cpus'] || 2
+@vm_cp_cpus = @config['vm_cp_cpus'] || 2
+@vm_worker_cpus = @config['vm_worker_cpus'] || 2 # Number of CPUs for worker nodes (default: 2)
 @vm_memory_worker_nodes = @config['vm_mem_workers'] || "2048" # 2GB
 @vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
 @k8s_num_worker_nodes = @config['k8s_num_worker_nodes'] || 0 # Number of worker nodes (default: 0)
@@ -64,7 +65,6 @@ Vagrant.configure("2") do |config|
     config.vm.box_version = @vm_box_version
 
     config.vm.provider "virtualbox" do |vb|
-        vb.cpus = @vm_cpus
         vb.gui = true
     end
 
@@ -170,6 +170,7 @@ EOF
         # Resource configuration
         cp.vm.provider "virtualbox" do |vb|
             vb.memory = @vm_memory_control_plane
+            vb.cpus = @vm_cp_cpus
         end
 
         cp.vm.provision "shell", inline: <<-SHELL
@@ -308,6 +309,7 @@ EOF
             # Resource configuration
             node.vm.provider "virtualbox" do |vb|
                 vb.memory = @vm_memory_worker_nodes
+                vb.cpus = @vm_worker_cpus
             end
         end
     end
