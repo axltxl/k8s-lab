@@ -29,7 +29,6 @@ end
 @vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
 @k8s_num_worker_nodes = @config['k8s_num_worker_nodes'] || 0 # Number of worker nodes (default: 0)
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
-@k8s_cni_network_cidr = @config['k8s_cni_network_cidr'] || "172.16.0.0/16" # Pod network CIDR
 @k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
 @k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
 
@@ -239,7 +238,6 @@ EOF
                 # Install Cilium CNI plugin
                 # ------------------------------------
                 cilium install \
-                    --set ipam.operator.clusterPoolIPv4PodCIDRList='#{@k8s_cni_network_cidr}' \
                     --set k8sServiceHost=#{@k8s_api_server_ip} \
                     --set k8sServicePort=6443
             fi
