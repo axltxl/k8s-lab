@@ -7,8 +7,8 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  # FIXME: doc me
-  - "{{ k8s_load_balancer_ip }}/32"
+    # FIXME: doc me
+    - "{{ k8s_load_balancer_ip }}/32"
   autoAssign: true
 ---
 apiVersion: metallb.io/v1beta1
@@ -18,4 +18,6 @@ metadata:
   namespace: metallb-system
 spec:
   ipAddressPools:
-  - default
+    - default
+  interfaces:
+    - eth1
