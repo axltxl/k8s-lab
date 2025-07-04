@@ -31,7 +31,6 @@ end
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
 @k8s_cni_network_cidr = @config['k8s_cni_network_cidr'] || "172.16.0.0/16" # Pod network CIDR
 @k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
-
 @k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
 
 # Check if the number of worker nodes is valid
@@ -120,8 +119,6 @@ Vagrant.configure("2") do |config|
         # Configure containerd
         # ------------------------------------
         sudo mkdir -p /etc/containerd
-        # FIXME: remove me
-        # sudo cp /vagrant/files/remote/containerd/config.toml /etc/containerd/config.toml
         j2 /vagrant/config.yaml /vagrant/files/remote/containerd/config.toml.j2 | sudo tee /etc/containerd/config.toml > /dev/null
 
         # Enable IPv4 forwarding
@@ -309,7 +306,6 @@ EOF
             SHELL
 
             # Network configuration
-            # FIXME
             node.vm.network "private_network", ip: k8s_node_ip
 
             # Resource configuration
