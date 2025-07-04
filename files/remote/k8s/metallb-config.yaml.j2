@@ -1,4 +1,5 @@
-# FIXME: doc me
+# MetalLB configuration for Kubernetes
+# This configuration sets up MetalLB to use a specific IP address for LoadBalancer services.
 ---
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
@@ -7,7 +8,10 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-    # FIXME: doc me
+    # This is the IP address that will be used by MetalLB
+    # to expose services of type LoadBalancer.
+    # It should be a valid IP address in the range of your network.
+    # Make sure this IP is not used by any other device in your network.
     - "{{ k8s_load_balancer_ip }}/32"
   autoAssign: true
 ---
