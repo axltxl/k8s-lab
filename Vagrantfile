@@ -62,12 +62,6 @@ Vagrant.configure("2") do |config|
     config.vm.box = @vm_box
     config.vm.box_version = @vm_box_version
 
-    # FIXME: remove me if VMWare does not make the cut
-    # config.vm.provider "virtualbox" do |vb|
-    #     vb.gui = true
-    #     vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"] # Explicitly enable promiscuous mode
-    # end
-
     config.vm.provider "vmware_desktop" do |vmware|
         vmware.gui = true
     end
@@ -170,11 +164,6 @@ EOF
         cp.vm.network "private_network", ip: @k8s_api_server_ip
 
         # Resource configuration
-        # FIXME: remove me if VMWare does not make the cut
-        # cp.vm.provider "virtualbox" do |vb|
-        #     vb.memory = @vm_memory_control_plane
-        #     vb.cpus = @vm_cp_cpus
-        # end
         cp.vm.provider "vmware_desktop" do |vmware|
             vmware.memory = @vm_memory_control_plane
             vmware.cpus = @vm_cp_cpus
@@ -317,11 +306,6 @@ EOF
             node.vm.network "private_network", ip: k8s_node_ip
 
             # Resource configuration
-            # FIXME: remove me if VMWare does not make the cut
-            # node.vm.provider "virtualbox" do |vb|
-            #     vb.memory = @vm_memory_worker_nodes
-            #     vb.cpus = @vm_worker_cpus
-            # end
             node.vm.provider "vmware_desktop" do |vmware|
                 vmware.memory = @vm_memory_worker_nodes
                 vmware.cpus = @vm_worker_cpus
