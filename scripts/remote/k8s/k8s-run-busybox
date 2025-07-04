@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -e
+
+node_name="$1"
+if [ -z "$node_name" ]; then
+  echo "Usage: $0 <node_name>"
+  exit 1
+fi
+
+kubectl delete pod busybox-test --grace-period=0 --force
+
+kubectl run busybox-test \
+  --image=busybox:1.35 \
+  --restart=Never \
+  --overrides="
+{
+  \"apiVersion\": \"v1\",
+  \"spec\": {
+    \"nodeSelector\": {
+      \"kubernetes.io/hostname\": \"${node_name}\"
+    },
+    \"hostNetwork\": true,
+    \"containers\": [
+      {
+        \"name\": \"busybox\",
+        \"image\": \"busybox:1.35\",
+        \"command\": [\"sh\"],
+        \"stdin\": true,
+        \"tty\": true
+      }
+    ]
+  }
+}" -it
+
+kubectl delete pod busybox-test --grace-period=0 --force

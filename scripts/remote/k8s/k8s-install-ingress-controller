@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This script installs the NGINX Ingress Controller on a Kubernetes cluster.
 # and configures it to use MetalLB for load balancing.
 set -e
