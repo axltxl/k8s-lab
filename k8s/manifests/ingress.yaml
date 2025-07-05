@@ -16,7 +16,6 @@ spec:
             backend:
               service:
                 name: todod
-                namespace: todo
                 port:
-                  number: todo.todod-port
+                  number: 8000
             path: /
