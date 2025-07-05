@@ -1,3 +1,7 @@
+# ------------------------------------
+# Vagrant configuration for Kubernetes lab
+# ------------------------------------
+
 # read configuration from YAML file
 require 'yaml'
 # Load the configuration file
@@ -11,13 +15,21 @@ end
 
 def config_get_key_or_die(config, key)
     if config.key?(key)
-        puts "Using #{key} from config: #{config[key]}"
         return config[key]
     else
         puts "#{key}: not found in config.yaml"
         exit 1
     end
 end
+
+# Print the configuration for debugging purposes
+puts "💽 Configuration loaded from #{config_file}:"
+puts "------------------------------------"
+for key, value in @config
+    puts "💽 #{key.ljust(30)} => #{value}"
+end
+puts "------------------------------------"
+
 
 # Variables
 # ------------------------------------
