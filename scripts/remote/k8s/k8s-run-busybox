@@ -19,7 +19,6 @@ kubectl run busybox-test \
     \"nodeSelector\": {
       \"kubernetes.io/hostname\": \"${node_name}\"
     },
-    \"hostNetwork\": true,
     \"containers\": [
       {
         \"name\": \"busybox\",
