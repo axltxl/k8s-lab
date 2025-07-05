@@ -80,6 +80,13 @@ Now we're ready to deploy it all into the cluster! yay!. This can be acomplished
 python deploy.py
 ```
 
+The latter will:
+
+- Build all docker images from all `apps/`
+- Apply any manifests in the `k8s/manifests` directory
+  - Among these, we have the main `Ingress` that will be sitting behind the `ingress-nginx` controller and exposed by `metallb`
+- Install/update any [Helm](helm.sh) charts located in the `k8s/charts` directory.
+
 ## (Optional) Install and access the _Kubernetes Dashboard_
 
 Additionally, you can install the [kubernetes dashboard](https://github.com/kubernetes/dashboard), by executing the `k8s-install-dashboard` utility in the control plane host:
@@ -90,13 +97,6 @@ k8s-install-dashboard
 ```
 
 At this point you can access by the means provided in the project's [documentation](https://github.com/kubernetes/dashboard/blob/master/docs/user/accessing-dashboard/README.md)
-
-The latter will:
-
-- Build all docker images from all `apps/`
-- Apply any manifests in the `k8s/manifests` directory
-  - Among these, we have the main `Ingress` that will be sitting behind the `ingress-nginx` controller and exposed by `metallb`
-- Install/update any [Helm](helm.sh) charts located in the `k8s/charts` directory.
 
 ## Copyright and Licensing
 
