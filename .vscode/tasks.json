@@ -11,7 +11,7 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "label": "vagrant/halt",
@@ -23,7 +23,7 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "label": "vagrant/destroy",
@@ -36,18 +36,6 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [],
-    },
-    {
-      "label": "k8s/vagrant/halt",
-      "type": "shell",
-      "command": "vagrant",
-      "args": [
-        "halt"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/files/local/k8s"
-      },
       "problemMatcher": []
     },
     {
@@ -56,7 +44,7 @@
       "options": {
         "env": {
           "KUBECONFIG": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig"
-        },
+        }
       },
       "command": "kubectl",
       "args": [
@@ -66,36 +54,15 @@
       ]
     },
     {
-      "label": "k8s/docker/build_images",
+      "label": "k8s/deploy",
       "type": "shell",
-      "command": "scripts/local/k8s/build_images.ps1",
-    },
-    {
-      "label": "k8s/apply",
-      "type": "process",
-      "command": "kubectl",
+      "command": "python",
       "args": [
-        "apply",
-        "--recursive",
-        "-f",
-        "k8s"
+        "deploy.py"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}",
-        "env": {
-          "KUBECONFIG": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig"
-        }
-      },
-      "dependsOrder": "sequence",
-      "dependsOn": [
-        "k8s/set_ctx",
-        "k8s/docker/build_images",
-      ],
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "problemMatcher": [
+        "$python"
+      ]
     }
   ]
 }
