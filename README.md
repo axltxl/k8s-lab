@@ -12,53 +12,80 @@ k8s-lab sets up a local multi-node Kubernetes cluster using Vagrant and Cilium. 
 - [docker](https://docker.com)
 - [kubectl](https://kubernetes.io)
 - [vagrant](https://vagrantup.com)
+- [VMWare Workstation/Fusion](https://www.vmware.com/products/desktop-hypervisor/workstation-and-fusion)
 
-## How to
+# ⚓ Set up the k8s cluster
 
-### 👨‍💻Local development of services
+First, let's create a configuration file
 
-####
-
-`go run src/cmd/todo/main.go`
-
-### 🚢 Docker-based development of services
-
-`docker-compose up`
-
-### ⚓ Kubernetes
-
-#### Set up your local Docker client🚢
-
-The cluster's control-plane host will also run a vanilla docker registry, with no TLS. Therefore it's necessary to configure your docker client to allow plain HTTP communication with the docker registry, this is done in the `/etc/docker/daemon.json` like so:
-
-```json
-{
-  "insecure-registries": ["192.168.0.11:5000"]
-}
+```sh
+cp config.example.yaml config.yaml
 ```
 
-#### Set up k8s cluster 🧰
+Secondly, start with creating the cluster from scratch 🔨
 
-First, start with creating the cluster from scratch 🔨
-
-```
+```sh
 vagrant up # Create and set up k8s cluster from scratch
 ```
 
 The latter will create the following (see: `Vagrantfile`):
 
-- a control plane host + 2 worker nodes by default
-  - OS of choice: Ubuntu Server 24.04
+- a control plane guest VM
   - CNI plugin of choice: [cilium](https://docs.cilium.io)
-  - VM network CIDR: `192.168.0.0/24`
-  - Pod network CIDR: `172.16.0.0/16`
-- an `k8s-lab-admin` user set of credentials, which will be available at `files/local/k8s/users`
+  - an `k8s-lab-admin` user set of credentials, which will be available at `files/local/k8s/users`
+- a number of worker nodes (see `k8s_number_work_nodes`)
+- OS of choice: Ubuntu Server 24.04
   - An `.env` file has been provided that sets `KUBECONFIG` to these credentials
-  - This project configures [vs-kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools) extension to use the cluster right out of the gate with the `k8s-lab-admin` user
+    - This project configures [vs-kubernetes](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools) extension to use the cluster right out of the gate with the `k8s-lab-admin` user
 
-#### Apply all manifests
+After all machines have been provisioned, you're welcome to double check whether cilium is doing fine on the control plane guest:
 
-`kubectl apply --recursive -f k8s`
+```sh
+> vagrant ssh cp # SSH into the control plane guest
+$ cilium status --wait
+$ cilium connectivity test
+```
+
+Once all is good, you will still need to install the ingress controller of choice -> [ingress-nginx](https://github.com/kubernetes/ingress-nginx) and load balancer of choice -> [metallb]() in order to expose all services running in the k8s cluster. There's a ready-to-go script in the control plane host:
+
+```sh
+> vagrant ssh cp
+$ k8s-install-ingress-controller # This will install and configure both ingress-nginx and metallb
+```
+
+## Set up your local Docker client🚢
+
+The cluster's control-plane host will also run a vanilla docker registry, with no TLS. Therefore it's necessary to configure your docker client to allow plain HTTP communication with the docker registry, this is done in the `/etc/docker/daemon.json` like so:
+
+```json
+{
+  "insecure-registries": ["<k8s_api_server_ip>:5000"]
+}
+```
+
+## Access the _load balancer_
+
+`metallb` will be listening on the IP address set by the `k8s_load_balancer_ip` setting in `config.yaml`. For example, if you set it to `192.168.64.1`, you could simply:
+
+```sh
+nc -zv 192.168.64.1 80 # test connection
+curl -v http://192.168.64.1 # an actual request to the load balancer
+```
+
+## Deploy all the things!
+
+Now we're ready to deploy it all into the cluster! yay!. This can be acomplished by running the `deploy.py` script at the root level directory:
+
+```sh
+python deploy.py
+```
+
+The latter will:
+
+- Build all docker images from all `apps/`
+- Apply any manifests in the `k8s/manifests` directory
+  - Among these, we have the main `Ingress` that will be sitting behind the `ingress-nginx` controller and exposed by `metallb`
+- Install/update any [Helm](helm.sh) charts located in the `k8s/charts` directory.
 
 ## Copyright and Licensing
 
