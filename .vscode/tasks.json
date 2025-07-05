@@ -39,6 +39,23 @@
       "problemMatcher": []
     },
     {
+      "label": "k8s/dashboard",
+      "type": "process",
+      "command": "kubectl",
+      "args": [
+        "-n",
+        "kubernetes-dashboard",
+        "port-forward",
+        "svc/kubernetes-dashboard-kong-proxy",
+        "8443:443"
+       ],
+      "options": {
+        "env": {
+          "KUBECONFIG": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig"
+        }
+      },
+    },
+    {
       "label": "k8s/set_ctx",
       "type": "process",
       "options": {

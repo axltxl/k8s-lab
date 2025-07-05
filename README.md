@@ -80,6 +80,17 @@ Now we're ready to deploy it all into the cluster! yay!. This can be acomplished
 python deploy.py
 ```
 
+## (Optional) Install and access the _Kubernetes Dashboard_
+
+Additionally, you can install the [kubernetes dashboard](https://github.com/kubernetes/dashboard), by executing the `k8s-install-dashboard` utility in the control plane host:
+
+```sh
+vagrant ssh cp
+k8s-install-dashboard
+```
+
+At this point you can access by the means provided in the project's [documentation](https://github.com/kubernetes/dashboard/blob/master/docs/user/accessing-dashboard/README.md)
+
 The latter will:
 
 - Build all docker images from all `apps/`

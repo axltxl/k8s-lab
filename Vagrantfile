@@ -283,6 +283,8 @@ EOF
             # ------------------------------------
             ln -sf /vagrant/scripts/remote/k8s/k8s-install-ingress-controller /usr/local/bin/k8s-install-ingress-controller
             ln -sf /vagrant/scripts/remote/k8s/k8s-run-busybox /usr/local/bin/k8s-run-busybox
+            ln -sf /vagrant/scripts/remote/k8s/k8s-install-dashboard /usr/local/bin/k8s-install-dashboard
+
         SHELL
     end
 
