@@ -3,7 +3,11 @@
 # -----------------------------------
 
 # Variables
-@baseUrl = http://{{hostName}}:{{hostPort}}
+@baseUrl = http://{{hostName}}:{{hostPort}}/todo/api/v1
+
+# health check
+#####################
+GET {{baseUrl}}/health
 
 
 #  TODO list
@@ -25,6 +29,3 @@ Content-Type: application/json
 }
 
 ###
-
-# GET TODO task
-GET {{baseUrl}}/todolist/task
