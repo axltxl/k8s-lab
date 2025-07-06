@@ -19,5 +19,8 @@
     "vs-kubernetes.applyManifests": [
       "${workspaceFolder}/k8s/"
     ]
-  }
+  },
+  "terminal.integrated.env.windows": {
+    "KUBECONFIG": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig"
+  },
 }
