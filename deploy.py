@@ -58,6 +58,7 @@ def build_and_push_docker_image(project_root):
     image = f"{docker_registry_host}:5000/k8s-lab/todod"
 
     print(f"📦 Building Docker image: {image}")
+    # subprocess.run(["docker", "build", ".", "--no-cache", "-t", image], check=True)
     subprocess.run(["docker", "build", ".", "-t", image], check=True)
 
     print(f"🚀 Pushing image to registry: {image}")
@@ -101,9 +102,66 @@ def k8s_deploy_manifests(project_root):
 
     # Path to the manifests
     manifests_dir = project_root / "k8s" / "manifests"
+    # If there are no YAML files, return
+    if not any(manifests_dir.glob("*.yaml")):
+        print("No Kubernetes manifests found to apply.")
+        return
 
     # Apply the manifests
     subprocess.run(["kubectl", "apply", "-Rf", manifests_dir], check=True)
+
+
+def k8s_install_helm_charts(project_root):
+    """
+    Installs Helm charts for a project.
+
+    This function sets up the environment, installs the Helm chart for the Todo application,
+    and patches the deployment with the correct image.
+
+    Args:
+      project_root (Path): The root directory of the project.
+
+    Steps:
+      1. Changes the working directory to the project root.
+      2. Sets the KUBECONFIG environment variable to point to the kubeconfig file.
+      3. Reads the Docker registry host IP from the project's `config.yaml` file.
+      4. Changes the working directory to the Helm charts directory.
+      5. Installs the Helm chart for the Todo application using `helm install`.
+      6. Reads and updates the `todod-deployment.yaml` file with the new container image.
+      7. Applies the updated deployment manifest using `kubectl apply`.
+
+    Raises:
+      subprocess.CalledProcessError: If any `helm` or `kubectl` command fails.
+      FileNotFoundError: If required files (e.g., kubeconfig, config.yaml, or deployment manifest) are missing.
+      KeyError: If the expected keys are not found in the YAML files.
+    """
+
+    os.chdir(project_root)
+
+    # Set the KUBECONFIG environment variable
+    kubeconfig_path = project_root / "files" / "local" / "k8s" / "users" / "k8s-lab-admin.kubeconfig"
+    os.environ["KUBECONFIG"] = str(kubeconfig_path)
+
+    # Read the registry host IP from YAML
+    config_path = project_root / "config.yaml"
+    docker_registry_host = get_yaml_root_key_value(config_path, "k8s_api_server_ip")
+
+    # Path to Helm charts
+    helm_charts_dir = project_root / "k8s" / "charts"
+
+    # Install Helm chart
+    print("Installing Helm chart for Todo application...")
+    for directory in helm_charts_dir.iterdir():
+        if directory.is_dir():
+            release_name = directory.name
+            chart = str(directory)
+            print(f"📦 Installing Helm chart: {release_name}")
+            subprocess.run(["helm", "upgrade", "--install", release_name, chart,
+                            "-n", release_name, # Namespace for the release
+                            "--create-namespace", # Create namespace if it doesn't exist
+                            "--set", f"deployment.image.repository={docker_registry_host}:5000/k8s-lab/{release_name}"],
+                            check=True)
+            print(f"🚀 Helm chart {release_name} installed successfully.")
 
 def main():
     # Root dir = 3 levels up from current script location
@@ -116,6 +174,10 @@ def main():
     # Apply base Kubernetes manifests
     print("📦 Applying Kubernetes manifests...")
     k8s_deploy_manifests(script_dir)
+
+    # Install all Helm charts
+    print("📦 Installing Helm charts...")
+    k8s_install_helm_charts(script_dir)
 
 if __name__ == "__main__":
     try:
