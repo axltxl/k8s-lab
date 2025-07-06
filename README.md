@@ -11,6 +11,7 @@ k8s-lab sets up a local multi-node Kubernetes cluster using Vagrant and Cilium. 
 - [golang](https://golang.org)
 - [docker](https://docker.com)
 - [kubectl](https://kubernetes.io)
+- [helm](https://helm.sh)
 - [vagrant](https://vagrantup.com)
 - [VMWare Workstation/Fusion](https://www.vmware.com/products/desktop-hypervisor/workstation-and-fusion)
 
