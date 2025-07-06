@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todod
+  name: todod-deployment
   namespace: todo
 spec:
   replicas: 3
@@ -38,7 +38,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: todod
+  name: todod-service
   namespace: todo
 spec:
   selector:
