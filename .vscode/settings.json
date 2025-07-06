@@ -1,20 +1,16 @@
 {
   "rest-client.environmentVariables": {
     "$shared": {
-      "hostName": "localhost",
-      "hostPort": "8000"
+      "hostName": "192.168.128.60",
+      "hostPort": "80"
     },
     "local": {
       "hostName": "{{$shared hostName}}",
       "hostPort": "{{$shared hostPort}}"
-    },
-    "minikube": {
-      "hostName": "192.168.64.4", // this doesn't work across restarts
-      "hostPort": "30800"
     }
   },
   "vs-kubernetes": {
-    "vs-kubernetes.namespace": "k8s-lab",
+    "vs-kubernetes.namespace": "default",
     "vs-kubernetes.kubeconfig": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig",
     "vs-kubernetes.applyManifests": [
       "${workspaceFolder}/k8s/"
