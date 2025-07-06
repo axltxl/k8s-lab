@@ -1,21 +1,20 @@
 # FIXME: Add Ingress controller setup and configuration
 # FIXME: consolidate me after installing Ingress controller via Helm
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: main
-  namespace: ingress-nginx
+  name: todod-ingress
+  namespace: todo
 spec:
   ingressClassName: nginx
   rules:
-    - host: todo
-      http:
+    - http:
         paths:
           - pathType: Prefix
+            path: /todo/api/v1
             backend:
               service:
                 name: todod
                 port:
-                  number: 8000
-            path: /
+                  name: todod-port
+
