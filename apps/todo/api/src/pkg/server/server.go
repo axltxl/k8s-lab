@@ -57,6 +57,21 @@ func standardHandler(f func(http.ResponseWriter, *http.Request) error) http.Hand
 	}
 }
 
+// GET /health
+func healthHandler(w http.ResponseWriter, r *http.Request) (err error) {
+  w.Header().Set("Content-Type", "application/json") // Set Content-Type to JSON
+
+  // Return a simple health check response
+  response := map[string]string{"status": "ok"}
+  response_json, err := json.Marshal(response)
+  if err != nil {
+    return
+  }
+
+  fmt.Fprintln(w, string(response_json))
+  return
+}
+
 // GET /todolist
 func todoListHandler(w http.ResponseWriter, r *http.Request) (err error) {
 
@@ -136,6 +151,7 @@ func todoListTaskHandler(w http.ResponseWriter, r *http.Request) (err error) {
 }
 
 func init() {
+  http.HandleFunc("/health", standardHandler(healthHandler))
 	http.HandleFunc("/todolist", standardHandler(todoListHandler))
 	http.HandleFunc("/todolist/task", standardHandler(todoListTaskHandler))
 }
