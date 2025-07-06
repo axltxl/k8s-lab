@@ -4,6 +4,7 @@
         "ms-azuretools.vscode-docker",
         "golang.go",
         // Kubernetes
-        "ms-kubernetes-tools.vscode-kubernetes-tools"
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "humao.rest-client"
     ]
 }
