@@ -103,7 +103,7 @@ def k8s_deploy_manifests(project_root):
     manifests_dir = project_root / "k8s" / "manifests"
 
     # Apply the manifests
-    subprocess.run(["kubectl", "apply", "-f", manifests_dir], check=True)
+    subprocess.run(["kubectl", "apply", "-Rf", manifests_dir], check=True)
 
 def main():
     # Root dir = 3 levels up from current script location
