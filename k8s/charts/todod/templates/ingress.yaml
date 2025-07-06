@@ -1,0 +1,26 @@
+# This Ingress resource is used to expose the "todod" service in the "todo" namespace.
+# It uses the "nginx" ingress class to handle incoming HTTP traffic.
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.fullname }}-ingress
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: "{{ $value }}"
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  rules:
+    - http:
+        paths:
+          {{- range .Values.ingress.paths }}
+          - pathType: {{ .pathType | default "Prefix" }}
+            path: {{ .path }}
+            backend:
+              service:
+                name: {{ $.Values.fullname }}-svc
+                port:
+                  name: {{ $.Values.fullname }}-svc-port
+          {{- end }}
+{{- end }}

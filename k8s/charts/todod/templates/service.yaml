@@ -1,0 +1,16 @@
+# A Service represents a single entrypoint in the cluster
+# acting as a "service", in the background it proxies all
+# traffic to pods whose labels match its selector field
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.fullname }}-svc
+spec:
+  selector:
+    app: {{ .Values.fullname }}
+  type: ClusterIP
+  ports:
+    - name: {{ .Values.fullname }}-svc-port
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.deployment.containerPort }}
+      protocol: TCP

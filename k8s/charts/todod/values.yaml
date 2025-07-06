@@ -1,0 +1,43 @@
+# Default values for todod.
+# This is a YAML-formatted file.
+
+# Very basics
+fullname: todod
+
+# deployment configuration
+deployment:
+  containerPort: 8000
+  image:
+    repository: "localhost:5000/k8s-lab/todod"
+    tag: latest
+    pullPolicy: Always
+  replicas: 1
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 10m
+    limits:
+      memory: 128Mi
+      cpu: 100m
+
+# service configuration
+service:
+  port: 8080
+
+# ingress configuration
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    # FIXME: remove me?
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+
+    # Use regex to match the path and rewrite it
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+  paths:
+    - path: /todo/api/v1(/|$)(.*)
+      # FIXME: remove me?
+      # pathType: Prefix
+      pathType: ImplementationSpecific
+
