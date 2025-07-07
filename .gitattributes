@@ -1,0 +1,10 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Explicitly set the line endings for these files.
+# These are executed on Linux
+*.sh text eol=lf
+*.py text eol=lf
+
+# However, these files are executed on the host platform
+deploy.sh text eol=auto
