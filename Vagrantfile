@@ -39,35 +39,9 @@ puts "------------------------------------"
 @vm_worker_cpus = @config['vm_worker_cpus'] || 2 # Number of CPUs for worker nodes (default: 2)
 @vm_memory_worker_nodes = @config['vm_mem_workers'] || "2048" # 2GB
 @vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
-@k8s_num_worker_nodes = @config['k8s_num_worker_nodes'] || 0 # Number of worker nodes (default: 0)
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
 @k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
 @k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
-
-# Check if the number of worker nodes is valid
-if @k8s_num_worker_nodes < 0 || @k8s_num_worker_nodes > 10
-    puts "Invalid number of worker nodes: #{@k8s_num_worker_nodes}. Must be between 0 and 10."
-    exit 1
-end
-
-# Check if the worker node IPs are provided when the number of worker nodes is greater than 0
-if @k8s_num_worker_nodes > 0 && @k8s_worker_node_ips.empty?
-    puts "Worker node IPs must be provided when the number of worker nodes is greater than 0."
-    exit 1
-end
-
-# Check if the worker node IPs match the number of worker nodes
-if @k8s_num_worker_nodes > 0 && @k8s_worker_node_ips.size != @k8s_num_worker_nodes
-    puts "Number of worker node IPs provided (#{@k8s_worker_node_ips.size}) does not match the number of worker nodes (#{@k8s_num_worker_nodes})."
-    exit 1
-end
-
-# Check if worker node IPs match the number of worker nodes
-if @k8s_num_worker_nodes > 0 && @k8s_worker_node_ips.size != @k8s_num_worker_nodes
-    puts "Number of worker node IPs provided (#{@k8s_worker_node_ips.size}) does not match the number of worker nodes (#{@k8s_num_worker_nodes})."
-    puts "Setting the number of worker nodes to #{@k8s_worker_node_ips.size}."
-    @k8s_num_worker_nodes = @k8s_worker_node_ips.size
-end
 
 Vagrant.configure("2") do |config|
 
@@ -290,10 +264,7 @@ EOF
 
     # Worker nodes
     # ----
-    (1..@k8s_num_worker_nodes).each do |i|
-
-        # Define the worker node IP address
-        k8s_node_ip = "#{@k8s_worker_node_ips[i - 1]}"
+    @k8s_worker_node_ips.each_with_index do |k8s_node_ip, i|
 
         config.vm.define "n#{i}" do |node|
             node.vm.provision "shell", inline: <<-SHELL
