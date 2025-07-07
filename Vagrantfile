@@ -22,14 +22,22 @@ def config_get_key_or_die(config, key)
     end
 end
 
+# Print title
+puts "------------------------------------"
+puts " _    _____     _       _     "
+puts "| |  |  _  |   | |     | |    "
+puts "| | __\ V / ___| | __ _| |__  "
+puts "| |/ // _ \/ __| |/ _` | '_ \ "
+puts "|   <| |_| \__ \ | (_| | |_) |"
+puts "|_|\_\_____/___/_|\__,_|_.__/ "
+puts "------------------------------------"
+
 # Print the configuration for debugging purposes
 puts "💽 Configuration loaded from #{config_file}:"
 puts "------------------------------------"
 for key, value in @config
     puts "💽 #{key.ljust(30)} => #{value}"
 end
-puts "------------------------------------"
-
 
 # Variables
 # ------------------------------------
