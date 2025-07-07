@@ -18,5 +18,5 @@
   },
   "terminal.integrated.env.windows": {
     "KUBECONFIG": "${workspaceFolder}/files/local/k8s/users/k8s-lab-admin.kubeconfig"
-  },
+  }
 }
