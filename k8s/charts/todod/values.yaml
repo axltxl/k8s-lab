@@ -11,7 +11,7 @@ deployment:
     repository: "localhost:5000/k8s-lab/todod"
     tag: latest
     pullPolicy: Always
-  replicas: 1
+  replicas: 3
   resources:
     requests:
       memory: 64Mi
