@@ -23,6 +23,6 @@ helm upgrade --install metallb metallb \
 --namespace metallb-system --create-namespace \
 --wait --timeout 5m0s
 
-# FIXME: doc me
+# Configure MetalLB
 j2 /vagrant/config.yaml /vagrant/files/remote/k8s/metallb-config.yaml.j2 > /vagrant/files/remote/k8s/metallb-config.yaml
 kubectl apply -f /vagrant/files/remote/k8s/metallb-config.yaml

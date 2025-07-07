@@ -29,15 +29,10 @@ ingress:
   enabled: true
   ingressClassName: nginx
   annotations:
-    # FIXME: remove me?
-    # nginx.ingress.kubernetes.io/rewrite-target: /
-
     # Use regex to match the path and rewrite it
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: "/$2"
   paths:
     - path: /todo/api/v1(/|$)(.*)
-      # FIXME: remove me?
-      # pathType: Prefix
       pathType: ImplementationSpecific
 
