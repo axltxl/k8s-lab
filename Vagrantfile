@@ -72,7 +72,8 @@ Vagrant.configure("2") do |config|
 
         # Install Python packages
         # ------------------------------------
-        sudo pip3 install -r /vagrant/scripts/remote/requirements.txt
+        # sudo pip3 install -r /vagrant/scripts/remote/requirements.txt
+        sudo apt-get install -y python3-jinja2
         sudo cp /vagrant/scripts/remote/j2.py /usr/local/bin/j2
         sudo chmod +x /usr/local/bin/j2
 
