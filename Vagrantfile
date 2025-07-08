@@ -45,8 +45,8 @@ end
 @vm_box_version = "202502.21.0"
 @vm_cplane_cpus = @config['vm_cplane_cpus'] || 2
 @vm_wnodes_cpus = @config['vm_wnodes_cpus'] || 2 # Number of CPUs for worker nodes (default: 2)
-@vm_memory_worker_nodes = @config['vm_mem_workers'] || "2048" # 2GB
-@vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
+@vm_wnodes_mem = @config['vm_wnodes_mem'] || "2048" # 2GB
+@vm_cplane_mem = @config['vm_cplane_mem'] || "2048" # 2GB
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
 @k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
 @k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
@@ -159,7 +159,7 @@ EOF
 
         # Resource configuration
         cp.vm.provider "vmware_desktop" do |vmware|
-            vmware.memory = @vm_memory_control_plane
+            vmware.memory = @vm_cplane_mem
             vmware.cpus = @vm_cplane_cpus
         end
 
@@ -300,7 +300,7 @@ EOF
 
             # Resource configuration
             node.vm.provider "vmware_desktop" do |vmware|
-                vmware.memory = @vm_memory_worker_nodes
+                vmware.memory = @vm_wnodes_mem
                 vmware.cpus = @vm_wnodes_cpus
             end
         end
