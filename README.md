@@ -66,7 +66,7 @@ The cluster's control-plane host will also run a vanilla docker registry, with n
 
 ## Access the _load balancer_
 
-`metallb` will be listening on the IP address set by the `k8s_load_balancer_ip` setting in `config.yaml`. For example, if you set it to `192.168.64.1`, you could simply:
+`metallb` will be listening on the IP address set by the `k8s_lb_addr` setting in `config.yaml`. For example, if you set it to `192.168.64.1`, you could simply:
 
 ```sh
 nc -zv 192.168.64.1 80 # test connection

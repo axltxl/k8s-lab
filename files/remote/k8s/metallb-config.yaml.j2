@@ -12,7 +12,7 @@ spec:
     # to expose services of type LoadBalancer.
     # It should be a valid IP address in the range of your network.
     # Make sure this IP is not used by any other device in your network.
-    - "{{ k8s_load_balancer_ip }}/32"
+    - "{{ k8s_lb_addr }}/32"
   autoAssign: true
 ---
 apiVersion: metallb.io/v1beta1

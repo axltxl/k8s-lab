@@ -11,7 +11,7 @@ vm_cplane_mem: 2048 # Memory for control plane node in MB (default: 2048)
 # All IPs must be in the same subnet
 # Netmask is assumed to be /24
 k8s_cplane_addr: "192.168.128.100" # IP address for the Kubernetes API server
-k8s_load_balancer_ip: "192.168.128.60" # IP address for the load balancer (MetalLB)
+k8s_lb_addr: "192.168.128.60" # IP address for the load balancer (MetalLB)
 
 # IP addresses for worker nodes
 # The number of IPs must match the number of worker nodes

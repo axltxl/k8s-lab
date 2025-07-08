@@ -48,7 +48,7 @@ end
 @vm_wnodes_mem = @config['vm_wnodes_mem'] || "2048" # 2GB
 @vm_cplane_mem = @config['vm_cplane_mem'] || "2048" # 2GB
 @k8s_cplane_addr = config_get_key_or_die(@config, 'k8s_cplane_addr') # Control plane host IP
-@k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
+@k8s_lb_addr = config_get_key_or_die(@config, 'k8s_lb_addr') # Load balancer IP (MetalLB)
 @k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
 
 Vagrant.configure("2") do |config|
