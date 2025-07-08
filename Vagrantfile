@@ -47,7 +47,7 @@ end
 @vm_wnodes_cpus = @config['vm_wnodes_cpus'] || 2 # Number of CPUs for worker nodes (default: 2)
 @vm_wnodes_mem = @config['vm_wnodes_mem'] || "2048" # 2GB
 @vm_cplane_mem = @config['vm_cplane_mem'] || "2048" # 2GB
-@k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
+@k8s_cplane_addr = config_get_key_or_die(@config, 'k8s_cplane_addr') # Control plane host IP
 @k8s_load_balancer_ip = config_get_key_or_die(@config, 'k8s_load_balancer_ip') # Load balancer IP (MetalLB)
 @k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
 
@@ -155,7 +155,7 @@ EOF
         cp.vm.box_version = @vm_box_version
 
         # Network configuration
-        cp.vm.network "private_network", ip: @k8s_api_server_ip
+        cp.vm.network "private_network", ip: @k8s_cplane_addr
 
         # Resource configuration
         cp.vm.provider "vmware_desktop" do |vmware|
@@ -194,7 +194,7 @@ EOF
 
             # Set up kubelet flags
             cat << EOF | sudo tee /etc/default/kubelet > /dev/null
-KUBELET_EXTRA_ARGS="--node-ip=#{@k8s_api_server_ip}"
+KUBELET_EXTRA_ARGS="--node-ip=#{@k8s_cplane_addr}"
 EOF
 
             # Restart kubelet service
@@ -221,7 +221,7 @@ EOF
                 # Install Cilium CNI plugin
                 # ------------------------------------
                 cilium install \
-                    --set k8sServiceHost=#{@k8s_api_server_ip} \
+                    --set k8sServiceHost=#{@k8s_cplane_addr} \
                     --set k8sServicePort=6443
             fi
 
@@ -244,7 +244,7 @@ EOF
             # whose credentials will be store in: /vagrant/files/local/k8s/users
             # and can be used to access the cluster
             # ------------------------------------
-            kubeadduser #{@k8s_api_server_ip}
+            kubeadduser #{@k8s_cplane_addr}
 
             # Install the docker-registry static pod
             # ------------------------------------

@@ -37,7 +37,7 @@ def build_and_push_docker_image(project_root):
       subprocess.CalledProcessError: If the Docker build or push command fails.
 
     Notes:
-      - The registry host IP is retrieved from the "k8s_api_server_ip" key in the
+      - The registry host IP is retrieved from the "k8s_cplane_addr" key in the
         "config.yaml" file located in the project root.
       - The Docker image is tagged with the format:
         "<docker_registry_host>:5000/k8s-lab/todod".
@@ -48,7 +48,7 @@ def build_and_push_docker_image(project_root):
 
     # Read the registry host IP from YAML
     config_path = project_root / "config.yaml"
-    docker_registry_host = get_yaml_root_key_value(config_path, "k8s_api_server_ip")
+    docker_registry_host = get_yaml_root_key_value(config_path, "k8s_cplane_addr")
 
     # Path to the app
     app_dir = project_root / "apps" / "todo" / "api"
@@ -98,7 +98,7 @@ def k8s_deploy_manifests(project_root):
 
     # Read the registry host IP from YAML
     config_path = project_root / "config.yaml"
-    docker_registry_host = get_yaml_root_key_value(config_path, "k8s_api_server_ip")
+    docker_registry_host = get_yaml_root_key_value(config_path, "k8s_cplane_addr")
 
     # Path to the manifests
     manifests_dir = project_root / "k8s" / "manifests"
@@ -144,7 +144,7 @@ def k8s_install_helm_charts(project_root):
 
     # Read the registry host IP from YAML
     config_path = project_root / "config.yaml"
-    docker_registry_host = get_yaml_root_key_value(config_path, "k8s_api_server_ip")
+    docker_registry_host = get_yaml_root_key_value(config_path, "k8s_cplane_addr")
 
     # Path to Helm charts
     helm_charts_dir = project_root / "k8s" / "charts"

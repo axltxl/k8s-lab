@@ -60,7 +60,7 @@ The cluster's control-plane host will also run a vanilla docker registry, with n
 
 ```json
 {
-  "insecure-registries": ["<k8s_api_server_ip>:5000"]
+  "insecure-registries": ["<k8s_cplane_addr>:5000"]
 }
 ```
 

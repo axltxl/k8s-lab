@@ -6,7 +6,7 @@
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: "{{ k8s_api_server_ip }}"
+  advertiseAddress: "{{ k8s_cplane_addr }}"
   bindPort: 6443
 
 ---
@@ -18,6 +18,6 @@ apiServer:
   # This is important for the API server to be reachable via these addresses
   # and for clients to trust the certificate.
   certSANs:
-    - "{{ k8s_api_server_ip }}" # internal IP address (see @k8s_api_server_ip)
+    - "{{ k8s_cplane_addr }}" # internal IP address (see @k8s_cplane_addr)
     - "10.0.2.15" # IP address of the default NAT interface made by Vagrant (see Vagrantfile)
     - "control-plane.local" # generic name for the control plane node (this can be used for mapping any IP address to a name)
