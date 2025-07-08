@@ -43,8 +43,8 @@ end
 # ------------------------------------
 @vm_box = "bento/ubuntu-24.04"
 @vm_box_version = "202502.21.0"
-@vm_cp_cpus = @config['vm_cp_cpus'] || 2
-@vm_worker_cpus = @config['vm_worker_cpus'] || 2 # Number of CPUs for worker nodes (default: 2)
+@vm_cplane_cpus = @config['vm_cplane_cpus'] || 2
+@vm_wnodes_cpus = @config['vm_wnodes_cpus'] || 2 # Number of CPUs for worker nodes (default: 2)
 @vm_memory_worker_nodes = @config['vm_mem_workers'] || "2048" # 2GB
 @vm_memory_control_plane = @config['vm_mem_controlplane'] || "2048" # 2GB
 @k8s_api_server_ip = config_get_key_or_die(@config, 'k8s_api_server_ip') # Control plane host IP
@@ -160,7 +160,7 @@ EOF
         # Resource configuration
         cp.vm.provider "vmware_desktop" do |vmware|
             vmware.memory = @vm_memory_control_plane
-            vmware.cpus = @vm_cp_cpus
+            vmware.cpus = @vm_cplane_cpus
         end
 
         cp.vm.provision "shell", inline: <<-SHELL
@@ -301,7 +301,7 @@ EOF
             # Resource configuration
             node.vm.provider "vmware_desktop" do |vmware|
                 vmware.memory = @vm_memory_worker_nodes
-                vmware.cpus = @vm_worker_cpus
+                vmware.cpus = @vm_wnodes_cpus
             end
         end
     end

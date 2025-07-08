@@ -1,8 +1,8 @@
 # Example configuration file for k8s-lab
 # Copy this file to `config.yaml` and adjust the settings as needed.
 ---
-vm_cp_cpus: 2 # Number of CPUs for control plane node (default: 2)
-vm_worker_cpus: 2 # Number of CPUs for worker nodes (default: 2)
+vm_cplane_cpus: 2 # Number of CPUs for control plane node (default: 2)
+vm_wnodes_cpus: 2 # Number of CPUs for worker nodes (default: 2)
 vm_memory_worker_nodes: 2048 # Memory for worker nodes in MB (default: 2048)
 vm_memory_control_plane: 2048 # Memory for control plane node in MB (default: 2048)
 k8s_num_worker_nodes: 1 # Number of worker nodes in the cluster (default: 0)
