@@ -62,6 +62,9 @@ Vagrant.configure("2") do |config|
 
     # General provisioning
     config.vm.provision "shell", inline: <<-SHELL
+        #!/usr/bin/env bash
+        set -euo pipefail
+
         sudo apt-get update -y
 
         # Install basic tooling
@@ -165,6 +168,9 @@ EOF
         end
 
         cp.vm.provision "shell", inline: <<-SHELL
+            #!/usr/bin/env bash
+            set -euo pipefail
+
             # Set hostname
             sudo hostnamectl set-hostname control-plane
 
@@ -223,7 +229,8 @@ EOF
                 # ------------------------------------
                 cilium install \
                     --set k8sServiceHost=#{@k8s_cplane_addr} \
-                    --set k8sServicePort=6443
+                    --set k8sServicePort=6443 \
+                    --wait
             fi
 
             # Generate the join command for worker nodes into a script
@@ -277,6 +284,9 @@ EOF
 
         config.vm.define "n#{i}" do |node|
             node.vm.provision "shell", inline: <<-SHELL
+                #!/usr/bin/env bash
+                set -euo pipefail
+
                 # Set hostname
                 sudo hostnamectl set-hostname n#{i}
 
