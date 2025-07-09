@@ -50,6 +50,7 @@ end
 @k8s_cplane_addr = config_get_key_or_die(@config, 'k8s_cplane_addr') # Control plane host IP
 @k8s_lb_addr = config_get_key_or_die(@config, 'k8s_lb_addr') # Load balancer IP (MetalLB)
 @k8s_worker_node_ips = @config['k8s_worker_node_ips'] || [] # List of worker node IPs (if not using dynamic IPs)
+@k8s_pod_network_cidr = @config['k8s_pod_network_cidr'] || "10.0.0.0/8" # Pod network CIDR (default: 10.0.0.0/8)
 
 Vagrant.configure("2") do |config|
 
@@ -227,10 +228,8 @@ EOF
 
                 # Install Cilium CNI plugin
                 # ------------------------------------
-                cilium install \
-                    --set k8sServiceHost=#{@k8s_cplane_addr} \
-                    --set k8sServicePort=6443 \
-                    --wait
+                j2 /vagrant/config.yaml /vagrant/files/remote/k8s/cilium-install-values.yaml.j2 > /vagrant/files/remote/k8s/cilium-install-values.yaml
+                cilium install --values /vagrant/files/remote/k8s/cilium-install-values.yaml --wait
             fi
 
             # Generate the join command for worker nodes into a script

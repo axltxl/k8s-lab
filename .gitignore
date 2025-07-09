@@ -9,6 +9,7 @@ __debug_bin
 files/remote/k8s/kubeadm-config.yaml
 files/remote/k8s/metallb-config.yaml
 files/remote/containerd/config.toml
+files/remote/k8s/cilium-install-values.yaml
 
 # config file
 config.yaml
