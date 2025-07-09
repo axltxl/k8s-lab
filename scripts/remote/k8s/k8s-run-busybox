@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Usage: k8s-run-busybox <node_name> [cmd] [args...]
 set -e
 
 node_name="$1"
@@ -7,28 +8,26 @@ if [ -z "$node_name" ]; then
   exit 1
 fi
 
-kubectl delete pod busybox-test --grace-period=0 --force
+# Delete any existing busybox-test pod on the specified node
+kubectl delete pod busybox-test --ignore-not-found
 
+# Run a busybox pod on the specified node with the provided command and arguments
+# The --override-type=merge allows us to specify nodeSelector in the pod spec
+# The --overrides flag is used to specify the nodeSelector for the pod
 kubectl run busybox-test \
   --image=busybox:1.35 \
   --restart=Never \
+  --rm \
+  --override-type=merge \
   --overrides="
 {
-  \"apiVersion\": \"v1\",
   \"spec\": {
     \"nodeSelector\": {
       \"kubernetes.io/hostname\": \"${node_name}\"
-    },
-    \"containers\": [
-      {
-        \"name\": \"busybox\",
-        \"image\": \"busybox:1.35\",
-        \"command\": [\"sh\"],
-        \"stdin\": true,
-        \"tty\": true
-      }
-    ]
+    }
   }
-}" -it
+}" -it -- "${@:2}"
 
-kubectl delete pod busybox-test --grace-period=0 --force
+# Clean up: delete the busybox-test pod after execution
+# This is done automatically by the --rm flag, but we can also explicitly delete it
+kubectl delete pod busybox-test --ignore-not-found
